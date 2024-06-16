@@ -139,7 +139,7 @@
     "to-vfile": "8.0.0",
     "trash-cli": "5.0.0",
     "ts-dedent": "2.2.0",
-    "typescript": "5.5.0-beta",
+    "typescript": "5.5.0-dev.20240603",
     "typescript-eslint": "8.0.0-alpha.30",
     "vite-tsconfig-paths": "4.3.2",
     "vitest": "2.0.0-beta.10",
