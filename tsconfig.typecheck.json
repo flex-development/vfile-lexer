@@ -1,0 +1,11 @@
+{
+  "exclude": ["**/coverage", "**/dist", "**/node_modules"],
+  "extends": "./tsconfig.json",
+  "files": ["typings/@faker-js/faker/global.d.ts", "vitest-env.d.ts"],
+  "include": [
+    "__fixtures__/**/**.ts",
+    "__tests__/**/**.ts",
+    "src/**/**.ts",
+    "src/**/.*.ts"
+  ]
+}

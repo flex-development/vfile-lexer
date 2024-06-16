@@ -1,0 +1,48 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "allowCompoundWords": true,
+  "caseSensitive": false,
+  "dictionaries": ["@flex-development/vfile-lexer"],
+  "dictionaryDefinitions": [
+    {
+      "name": "@flex-development/vfile-lexer",
+      "path": "./.dictionary.txt"
+    }
+  ],
+  "enableGlobDot": true,
+  "failFast": false,
+  "flagWords": [],
+  "ignorePaths": [
+    "**/*.log",
+    "**/*.snap",
+    "**/*.wasm",
+    "**/.*ignore",
+    "**/.gitconfig",
+    "**/CHANGELOG.md",
+    "**/LICENSE.md",
+    "**/RELEASE_NOTES.md",
+    "**/scratch.*",
+    ".cspell.json",
+    ".dictionary.txt",
+    ".git/",
+    ".husky/_/",
+    ".vscode/settings.json",
+    ".yarn/",
+    "dist/",
+    "patches/",
+    "yarn.lock"
+  ],
+  "ignoreRegExpList": [
+    "/@flex-development\\/.*/",
+    "/from\\s+(['\"]).*\\1/",
+    "\\\\u001B\\[\\d+m",
+    "import\\(.*\\)"
+  ],
+  "ignoreWords": [],
+  "language": "en-US",
+  "patterns": [],
+  "readonly": true,
+  "useGitignore": true,
+  "usePnP": false,
+  "version": "0.2"
+}

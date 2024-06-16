@@ -1,0 +1,46 @@
+# Add To Project
+#
+# Add new issues and pull requests to the project board.
+#
+# References:
+#
+# - https://docs.github.com/actions/learn-github-actions/contexts
+# - https://docs.github.com/actions/learn-github-actions/expressions
+# - https://docs.github.com/actions/using-workflows/events-that-trigger-workflows#issues
+# - https://docs.github.com/actions/using-workflows/events-that-trigger-workflows#pull_request
+# - https://docs.github.com/webhooks-and-events/webhooks/webhook-events-and-payloads#issues
+# - https://docs.github.com/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request
+# - https://github.com/actions/add-to-project
+# - https://github.com/actions/create-github-app-token
+# - https://github.com/hmarr/debug-action
+
+---
+name: add-to-project
+on:
+  issues:
+    types:
+      - opened
+  pull_request:
+    types:
+      - opened
+      - synchronize
+jobs:
+  add-to-project:
+    runs-on: ubuntu-latest
+    steps:
+      - id: debug
+        name: Print environment variables and event payload
+        uses: hmarr/debug-action@v3.0.0
+      - id: bot-token
+        name: Get bot token
+        uses: actions/create-github-app-token@v1.10.1
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+      - id: add-item
+        name: Add ${{ format('#{0}', github.event.number) }} to project
+        uses: actions/add-to-project@v1.0.1
+        with:
+          github-token: ${{ steps.bot-token.outputs.token }}
+          project-url: |
+            ${{ format('{0}/orgs/{1}/projects/{2}', github.server_url, github.repository_owner, vars.GH_PROJECT_NUMBER) }}

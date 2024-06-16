@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "customConditions": ["import", "node"],
+    "declaration": true,
+    "noEmitOnError": true,
+    "paths": {
+      "#src/*": ["src/*"]
+    },
+    "target": "es2022"
+  },
+  "exclude": [],
+  "extends": "./tsconfig.json",
+  "include": ["./dist/*"]
+}

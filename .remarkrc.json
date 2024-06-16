@@ -1,0 +1,8 @@
+{
+  "plugins": [
+    "remark-directive",
+    ["remark-frontmatter", ["yaml"]],
+    "remark-gfm"
+  ],
+  "settings": {}
+}
