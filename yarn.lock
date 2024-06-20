@@ -5450,7 +5450,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:15.6.0":
+"globals@npm:15.6.0, globals@npm:^15.0.0":
   version: 15.6.0
   resolution: "globals@npm:15.6.0"
   checksum: 10/9b522b1eff444acaf331b0da7f072d5ef75b1cde02d89b3656039252f01b6bcda7a9ea42128e8644117c0ede9116249b1bcf830458b7dbe19fafd4de916a3dc0
@@ -5461,13 +5461,6 @@ __metadata:
   version: 14.0.0
   resolution: "globals@npm:14.0.0"
   checksum: 10/03939c8af95c6df5014b137cac83aa909090c3a3985caef06ee9a5a669790877af8698ab38007e4c0186873adc14c0b13764acc754b16a754c216cc56aa5f021
-  languageName: node
-  linkType: hard
-
-"globals@npm:^15.0.0":
-  version: 15.5.0
-  resolution: "globals@npm:15.5.0"
-  checksum: 10/c73267492c9c16e43a981977c72da03b190723a04a9703f738a8855b33906d8ddf7f393adca3e239a3d6a9ee595734bed436bb5102fcfb42206f5e7f4c5377cd
   languageName: node
   linkType: hard
 
