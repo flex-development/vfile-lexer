@@ -331,7 +331,7 @@ jobs:
       - id: test
         if: steps.test-files-check.outputs.files_exists == 'true'
         name: Run tests
-        run: yarn test:cov --segfault-retry=3
+        run: yarn test:cov
       - id: codecov
         name: Upload coverage report to Codecov
         if: steps.test-files-check.outputs.files_exists == 'true'

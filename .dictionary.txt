@@ -21,10 +21,13 @@ mkbuild
 mlly
 nocheck
 nvmrc
+onreturn
 pathe
 pkgs
 preid
 shfmt
+succ
+tokenizes
 unstub
 vates
 vfile

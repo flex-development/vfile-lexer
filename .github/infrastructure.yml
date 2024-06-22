@@ -41,7 +41,7 @@ branches:
           - context: test (20)
           - context: typescript (5.3.3)
           - context: typescript (5.4.5)
-          - context: typescript (5.5.0-beta)
+          - context: typescript (5.5.2)
           - context: typescript (latest)
         strict: true
       restrictions: null

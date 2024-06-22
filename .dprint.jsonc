@@ -35,7 +35,7 @@
       },
       {
         "command": "node ./dprint/shfmt.mjs {{file_path}}",
-        "exts": ["sh", "txt", "zsh"],
+        "exts": ["sh", "zsh"],
         "fileNames": [
           ".editorconfig",
           ".env",

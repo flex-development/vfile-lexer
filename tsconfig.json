@@ -29,7 +29,9 @@
     "noUnusedParameters": false,
     "outDir": "dist",
     "paths": {
-      "#src/*": ["src/*"]
+      "#fixtures/*": ["__fixtures__/*"],
+      "#src/*": ["src/*"],
+      "#tests/*": ["__tests__/*"]
     },
     "preserveConstEnums": true,
     "preserveSymlinks": false,

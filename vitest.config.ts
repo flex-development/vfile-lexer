@@ -47,7 +47,7 @@ const config: UserConfigExport = defineConfig((env: ConfigEnv): UserConfig => {
       benchmark: {
         include: ['**/__tests__/*.bench.spec.ts?(x)'],
         outputJson: '__tests__/benchmark.json',
-        reporters: ['verbose', new Notifier()]
+        reporters: ['default', new Notifier()]
       },
       chaiConfig: {
         includeStack: true,
@@ -134,12 +134,14 @@ const config: UserConfigExport = defineConfig((env: ConfigEnv): UserConfig => {
         }
       },
       setupFiles: ['./__tests__/setup/index.ts'],
+      slowTestThreshold: 300 * (env.mode === 'benchmark' ? 13.75 : 1),
       snapshotFormat: {
         callToJSON: true,
         min: false,
         printBasicPrototype: false,
         printFunctionName: true
       },
+      snapshotSerializers: ['__tests__/serializers/token.ts'],
       typecheck: {
         allowJs: false,
         checker: 'tsc',

@@ -89,4 +89,7 @@ ignore:
   - '!src/index.ts'
 
 profiling:
-  critical_files_paths: []
+  critical_files_paths:
+    - src/constructs/eof.ts
+    - src/constructs/initialize.ts
+    - src/lexer.ts

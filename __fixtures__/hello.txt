@@ -1,0 +1,2 @@
+const 你好 = "hello 👋";
+console.log(\u4f60\u597d); // hello 👋

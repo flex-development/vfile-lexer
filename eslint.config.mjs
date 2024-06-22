@@ -23,9 +23,14 @@ export default [
     ]
   },
   {
-    files: ['src/types/token-kind.ts'],
+    files: [
+      '__tests__/constructs/inline-tag.ts',
+      '__tests__/constructs/string.ts',
+      'src/constructs/initialize.ts',
+      'src/lexer.ts'
+    ],
     rules: {
-      '@typescript-eslint/no-redundant-type-constituents': 0
+      'unicorn/no-this-assignment': 0
     }
   }
 ]

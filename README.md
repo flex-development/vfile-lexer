@@ -2,7 +2,7 @@
 
 [![github release](https://img.shields.io/github/v/release/flex-development/vfile-lexer.svg?include_prereleases&sort=semver)](https://github.com/flex-development/vfile-lexer/releases/latest)
 [![npm](https://img.shields.io/npm/v/@flex-development/vfile-lexer.svg)](https://npmjs.com/package/@flex-development/vfile-lexer)
-[![codecov](https://codecov.io/gh/flex-development/vfile-lexer/graph/badge.svg?token=)](https://codecov.io/gh/flex-development/vfile-lexer)
+[![codecov](https://codecov.io/gh/flex-development/vfile-lexer/graph/badge.svg?token=iA1BvaucoZ)](https://codecov.io/gh/flex-development/vfile-lexer)
 [![module type: esm](https://img.shields.io/badge/module%20type-esm-brightgreen)](https://github.com/voxpelli/badges-cjs-esm)
 [![license](https://img.shields.io/github/license/flex-development/vfile-lexer.svg)](LICENSE.md)
 [![conventional commits](https://img.shields.io/badge/-conventional%20commits-fe5196?logo=conventional-commits&logoColor=ffffff)](https://conventionalcommits.org/)
