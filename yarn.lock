@@ -1670,6 +1670,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@flex-development/unist-util-builder@npm:2.0.0":
+  version: 2.0.0
+  resolution: "@flex-development/unist-util-builder@npm:2.0.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40flex-development%2Funist-util-builder%2F2.0.0%2F2589c6774a811c50c2d08501dfcd1a5ed551c883"
+  dependencies:
+    "@flex-development/unist-util-types": "npm:1.6.1"
+    "@types/unist": "npm:3.0.2"
+  checksum: 10/58e6dc90395b636d7c02d5ab5966a8fbdaf0e9a01c8ff99398e98f8570b422b9c08492365968a85517d6d7991f095a11732a37f775a5af8773c2dda2f673de6d
+  languageName: node
+  linkType: hard
+
+"@flex-development/unist-util-inspect@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@flex-development/unist-util-inspect@npm:1.0.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40flex-development%2Funist-util-inspect%2F1.0.0%2F2585616dd8111de66e7ddc2d846a5e077c57c982"
+  dependencies:
+    "@flex-development/unist-util-stringify-position": "npm:1.0.0"
+    "@types/unist": "npm:3.0.2"
+  checksum: 10/c1b81c3191e2be2bbbcff95f1a2e99afe4360cd72eebbe0b5401499fd9c89c9fa2e42adc7f875fbc7a6204bb75d33a2ad7f0b53a19bca4547182d784143a21d8
+  languageName: node
+  linkType: hard
+
+"@flex-development/unist-util-stringify-position@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@flex-development/unist-util-stringify-position@npm:1.0.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40flex-development%2Funist-util-stringify-position%2F1.0.0%2Fb2a5cbc97f53cee6e215f15a908a78109e543b48"
+  dependencies:
+    "@flex-development/unist-util-types": "npm:1.6.1"
+    "@types/unist": "npm:3.0.2"
+  checksum: 10/085cfe2ce2398c1aa0f986ea54789a1cb1df69a348af7f2e013a443fd5672c76c8d2764cacefa0babe9545ed63a623876e0eb2c989a9516dad55e216d5bb9a53
+  languageName: node
+  linkType: hard
+
 "@flex-development/unist-util-types@npm:1.4.0":
   version: 1.4.0
   resolution: "@flex-development/unist-util-types@npm:1.4.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40flex-development%2Funist-util-types%2F1.4.0%2F7bc3e76774ee0ff16f31bf3ca7caaec923795e07"
@@ -1705,6 +1735,8 @@ __metadata:
     "@flex-development/mlly": "npm:1.0.0-alpha.18"
     "@flex-development/pathe": "npm:2.0.0"
     "@flex-development/tutils": "npm:6.0.0-alpha.25"
+    "@flex-development/unist-util-builder": "npm:2.0.0"
+    "@flex-development/unist-util-inspect": "npm:1.0.0"
     "@flex-development/unist-util-types": "npm:1.6.1"
     "@flex-development/vfile-reader": "npm:3.1.1"
     "@stylistic/eslint-plugin": "npm:2.2.2"
@@ -1762,7 +1794,6 @@ __metadata:
     ts-dedent: "npm:2.2.0"
     typescript: "npm:5.5.2"
     typescript-eslint: "npm:8.0.0-alpha.30"
-    unist-util-stringify-position: "npm:4.0.0"
     vfile: "npm:6.0.1"
     vite-tsconfig-paths: "npm:4.3.2"
     vitest: "npm:2.0.0-beta.11"
@@ -10076,21 +10107,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unist-util-stringify-position@npm:4.0.0, unist-util-stringify-position@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "unist-util-stringify-position@npm:4.0.0"
-  dependencies:
-    "@types/unist": "npm:^3.0.0"
-  checksum: 10/d15c88aca7a31902d95d5b5355bbe09583cf6f6ff6e59e134ef76c76d3c30bc1021f2d7ea5b7897c6d0858ed5f3770c1b19de9c78274f50d72f95a0d05f1af71
-  languageName: node
-  linkType: hard
-
 "unist-util-stringify-position@npm:^2.0.0":
   version: 2.0.3
   resolution: "unist-util-stringify-position@npm:2.0.3"
   dependencies:
     "@types/unist": "npm:^2.0.2"
   checksum: 10/affbfd151f0df055ce0dddf443fc41353ab3870cdba6b3805865bd6a41ce22d9d8e65be0ed8839a8731d05b61421d2df9fd8c35b67adf86040bf4b1f8a04a42c
+  languageName: node
+  linkType: hard
+
+"unist-util-stringify-position@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "unist-util-stringify-position@npm:4.0.0"
+  dependencies:
+    "@types/unist": "npm:^3.0.0"
+  checksum: 10/d15c88aca7a31902d95d5b5355bbe09583cf6f6ff6e59e134ef76c76d3c30bc1021f2d7ea5b7897c6d0858ed5f3770c1b19de9c78274f50d72f95a0d05f1af71
   languageName: node
   linkType: hard
 
