@@ -169,7 +169,7 @@ class Lexer {
   protected lastConstruct: Construct | null | undefined
 
   /**
-   * Last event index.
+   * Last {@linkcode events} length.
    *
    * @see {@linkcode Offset}
    *
@@ -189,6 +189,15 @@ class Lexer {
    * @member {Offset} lastIndex
    */
   protected lastIndex: Offset
+
+  /**
+   * Last tail token.
+   *
+   * @protected
+   * @instance
+   * @member {Token | null} lastToken
+   */
+  protected lastToken: Token | null
 
   /**
    * Source file reader.
@@ -272,6 +281,7 @@ class Lexer {
     this.lastConstruct = null
     this.lastEvent = 0
     this.lastIndex = 0
+    this.lastToken = null
     this.resolveAll = []
 
     /**
@@ -687,24 +697,20 @@ class Lexer {
   protected restore(): undefined {
     assert(this.lastEvent >= 0, 'expected last event index')
     assert(this.lastIndex >= 0, 'expected last reader position')
+    assert(this.lastToken, 'expected last token')
 
     this.reader.read(this.lastIndex - this.reader.index)
     this.context.construct = this.lastConstruct
     this.events.length = this.lastEvent
-
-    this.tail = undefined as unknown as Token
-
-    if (this.events.length) {
-      this.tail = this.events[this.events.length - 1]![1]
-      this.tail.next = undefined
-    }
+    this.tail = this.lastToken
+    this.tail.next = undefined
 
     this.debug('restore: %o', this.now())
     return void this
   }
 
   /**
-   * Store the current construct, event index, and reader position.
+   * Store the current construct, event index reader position, and tail token.
    *
    * @protected
    * @instance
@@ -715,6 +721,7 @@ class Lexer {
     this.lastConstruct = this.context.construct
     this.lastEvent = this.events.length
     this.lastIndex = this.reader.index
+    this.lastToken = this.tail
 
     return void this
   }

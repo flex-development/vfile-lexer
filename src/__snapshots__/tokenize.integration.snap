@@ -15,7 +15,8 @@ tokens[2]
 exports[`integration:tokenize > user constructs > non-empty file > sample 0 1`] = `
 tokens[3]
 ├─0 sof (1:1-1:1, 0-0)
-├─1 inlineTag (1:1-1:17, 0-16)
+├─1 inlineTag "Code" (1:1-1:17, 0-16)
+│     tag: "@linkcode"
 └─2 eof (2:1-2:1, 17-17)
 `;
 
