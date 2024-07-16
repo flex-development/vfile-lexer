@@ -25,16 +25,10 @@ describe('unit-d:interfaces/TokenizeContext', () => {
     expectTypeOf<TestSubject>().toHaveProperty('code').toEqualTypeOf<Code>()
   })
 
-  it('should match [construct?: Construct | null | undefined]', () => {
+  it('should match [currentConstruct?: Construct | null | undefined]', () => {
     expectTypeOf<TestSubject>()
-      .toHaveProperty('construct')
+      .toHaveProperty('currentConstruct')
       .toEqualTypeOf<Nilable<Construct>>()
-  })
-
-  it('should match [constructs: readonly Construct[]]', () => {
-    expectTypeOf<TestSubject>()
-      .toHaveProperty('constructs')
-      .toEqualTypeOf<readonly Construct[]>()
   })
 
   it('should match [disabled: readonly string[]]', () => {

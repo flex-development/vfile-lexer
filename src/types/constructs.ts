@@ -3,13 +3,16 @@
  * @module vfile-lexer/types/Constructs
  */
 
-import type { Construct } from '#src/interfaces'
+import type ConstructRecord from './construct-record'
+import type RecordConstructs from './constructs-record'
 
 /**
- * A single construct, or a list of constructs.
+ * A single construct, list of constructs, or several constructs mapped from
+ * their initial codes.
  *
- * @see {@linkcode Construct}
+ * @see {@linkcode ConstructRecord}
+ * @see {@linkcode RecordConstructs}
  */
-type Constructs = Construct | Construct[] | readonly Construct[]
+type Constructs = ConstructRecord | RecordConstructs
 
 export type { Constructs as default }

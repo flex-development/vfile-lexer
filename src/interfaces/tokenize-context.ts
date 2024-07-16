@@ -33,18 +33,13 @@ interface TokenizeContext {
   get code(): Code
 
   /**
-   * Current construct.
+   * The current construct.
+   *
+   * Constructs that are not `partial` are set here.
    *
    * @see {@linkcode Construct}
    */
-  construct?: Construct | null | undefined
-
-  /**
-   * All constructs.
-   *
-   * @see {@linkcode Construct}
-   */
-  constructs: readonly Construct[]
+  currentConstruct?: Construct | null | undefined
 
   /**
    * Disabled construct names.
