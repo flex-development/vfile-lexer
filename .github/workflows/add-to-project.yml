@@ -39,7 +39,7 @@ jobs:
           private-key: ${{ secrets.BOT_PRIVATE_KEY }}
       - id: add-item
         name: Add ${{ format('#{0}', github.event.number) }} to project
-        uses: actions/add-to-project@v1.0.1
+        uses: actions/add-to-project@v1.0.2
         with:
           github-token: ${{ steps.bot-token.outputs.token }}
           project-url: |
