@@ -9,6 +9,7 @@ import type { Options } from '#src/interfaces'
 import { inlineTag, numeric, punctuator, string, ws } from '#tests/constructs'
 import token from '#tests/utils/token'
 import { identity } from '@flex-development/tutils'
+import { codes } from '@flex-development/vfile-reader'
 import { readSync as read } from 'to-vfile'
 import type { VFile, Value } from 'vfile'
 import type Lexer from '../lexer'
@@ -47,18 +48,21 @@ describe('integration:tokenize', () => {
     describe('non-empty file', () => {
       it.each<[VFile, (Partial<Options> | null | undefined)?]>([
         [read('__fixtures__/inline-tag.txt'), {
-          constructs: [inlineTag, ws],
+          constructs: {
+            [codes.cr]: ws,
+            [codes.leftBrace]: inlineTag,
+            [codes.lf]: ws,
+            [codes.space]: ws
+          },
           context: vi.fn(),
-          disabled: [tk.whitespace],
-          initialize: {
-            name: initialize.name,
-            resolveAll: vi.fn(identity),
-            tokenize: initialize.tokenize
-          }
+          disabled: [tk.whitespace]
         }],
         [read('__fixtures__/hello.txt'), {
           constructs: [string, punctuator],
-          context: vi.fn(identity)
+          context: vi.fn(identity),
+          initialize: Object.assign(initialize([string, punctuator]), {
+            resolveAll: vi.fn(identity)
+          })
         }],
         [read('__fixtures__/strings.txt'), {
           constructs: [string, punctuator]

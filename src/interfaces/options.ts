@@ -3,12 +3,8 @@
  * @module vfile-lexer/interfaces/Options
  */
 
-import type {
-  FinalizeContext,
-  TokenFactory
-} from '#src/types'
+import type { Constructs, FinalizeContext, TokenFactory } from '#src/types'
 import type { Point } from '@flex-development/vfile-reader'
-import type Construct from './construct'
 import type InitialConstruct from './construct-initial'
 
 /**
@@ -18,9 +14,9 @@ interface Options {
   /**
    * Constructs.
    *
-   * @see {@linkcode Construct}
+   * @see {@linkcode Constructs}
    */
-  constructs?: readonly Construct[] | null | undefined
+  constructs?: Constructs | null | undefined
 
   /**
    * Finalize the tokenization context.

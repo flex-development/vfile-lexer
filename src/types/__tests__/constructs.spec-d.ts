@@ -3,19 +3,16 @@
  * @module vfile-lexer/types/tests/unit-d/Constructs
  */
 
-import type { Construct } from '#src/interfaces'
+import type ConstructRecord from '../construct-record'
 import type TestSubject from '../constructs'
+import type RecordConstructs from '../constructs-record'
 
 describe('unit-d:types/Constructs', () => {
-  it('should extract Construct', () => {
-    expectTypeOf<TestSubject>().extract<Construct>().not.toBeNever()
+  it('should extract ConstructRecord', () => {
+    expectTypeOf<TestSubject>().extract<ConstructRecord>().not.toBeNever()
   })
 
-  it('should extract Construct[]', () => {
-    expectTypeOf<TestSubject>().extract<Construct[]>().not.toBeNever()
-  })
-
-  it('should extract readonly Construct[]', () => {
-    expectTypeOf<TestSubject>().extract<readonly Construct[]>().not.toBeNever()
+  it('should extract RecordConstructs', () => {
+    expectTypeOf<TestSubject>().extract<RecordConstructs>().not.toBeNever()
   })
 })

@@ -16,7 +16,9 @@ export type {
   default as Check,
   default as Interrupt
 } from './attempt'
+export type { default as ConstructRecord } from './construct-record'
 export type { default as Constructs } from './constructs'
+export type { default as RecordConstructs } from './constructs-record'
 export type { default as Consume } from './consume'
 export type { default as Effects } from './effects'
 export type { default as Enter } from './enter'

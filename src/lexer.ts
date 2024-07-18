@@ -25,6 +25,7 @@ import type {
 } from './interfaces'
 import type {
   Attempt,
+  ConstructRecord,
   Constructs,
   Effects,
   Event,
@@ -54,17 +55,6 @@ class Lexer {
   protected code: Code
 
   /**
-   * List of constructs.
-   *
-   * @see {@linkcode Construct}
-   *
-   * @protected
-   * @instance
-   * @member {Readonly<Construct>} constructs
-   */
-  protected constructs: readonly Construct[]
-
-  /**
    * Character code consumption state, used for tracking bugs.
    *
    * @protected
@@ -78,11 +68,11 @@ class Lexer {
    *
    * @see {@linkcode TokenizeContext}
    *
-   * @protected
+   * @public
    * @instance
    * @member {TokenizeContext} context
    */
-  protected context: TokenizeContext
+  public context: TokenizeContext
 
   /**
    * Debug logger.
@@ -267,7 +257,6 @@ class Lexer {
   constructor(file: Value | VFile | null | undefined, options: Options) {
     assert(options.token, 'expected token factory')
 
-    this.constructs = Object.freeze([...(options.constructs ?? [])])
     this.debug = debug(options.debug ?? 'vfile-lexer')
     this.disabled = Object.freeze(options.disabled ?? [])
     this.reader = new Reader(file, options.from)
@@ -277,7 +266,7 @@ class Lexer {
     this.consumed = true
     this.eof = false
     this.events = []
-    this.initialize = options.initialize ?? initialize
+    this.initialize = options.initialize ?? initialize(options.constructs ?? [])
     this.lastConstruct = null
     this.lastEvent = 0
     this.lastIndex = 0
@@ -292,8 +281,7 @@ class Lexer {
     const context: TokenizeContext = Object.defineProperties({
       check: this.reader.check.bind(this.reader),
       code: this.code,
-      construct: this.lastConstruct,
-      constructs: this.constructs,
+      currentConstruct: this.lastConstruct,
       disabled: this.disabled,
       events: this.events,
       includes: this.reader.includes.bind(this.reader),
@@ -312,7 +300,7 @@ class Lexer {
       previous: { configurable: false, get: (): Code => this.reader.previous },
       token: {
         configurable: false,
-        get: (): Readonly<Token> => Object.freeze(this.tail)
+        get: (): Readonly<Token> => Object.freeze(Object.assign({}, this.tail))
       }
     })
 
@@ -381,9 +369,9 @@ class Lexer {
       /**
        * Current construct.
        *
-       * @var {Construct} current
+       * @var {Construct} currentConstruct
        */
-      let current: Construct
+      let currentConstruct: Construct
 
       /**
        * Index of current construct.
@@ -399,8 +387,10 @@ class Lexer {
        */
       let list: readonly Construct[]
 
-      // handle a single construct, or a list of constructs
-      return handleConstructList([construct].flat())
+      // handle a single construct, list of constructs, or map of constructs
+      return 'tokenize' in construct || Array.isArray(construct)
+        ? handleConstructList([construct].flat())
+        : handleConstructMap(construct)
 
       /**
        * Handle a list of constructs.
@@ -418,6 +408,40 @@ class Lexer {
         }
 
         return handleConstruct(constructs[j]!)
+      }
+
+      /**
+       * Handle a construct record.
+       *
+       * @param {ConstructRecord} map - Constructs to try
+       * @return {State} Next state
+       */
+      function handleConstructMap(map: ConstructRecord): State {
+        return start
+
+        /**
+         * Check if `value` looks like a construct, or list of constructs.
+         *
+         * @param {unknown} value - Value to check
+         * @return {value is Construct | ReadonlyArray<Construct>} `true` if
+         * value is an object
+         */
+        function is(value: unknown): value is Construct | readonly Construct[] {
+          return typeof value === 'object'
+        }
+
+        /**
+         * Start construct tokenization.
+         *
+         * @param {Code} code - Current character code
+         * @return {State | undefined} Next state
+         */
+        function start(code: Code): State | undefined {
+          return handleConstructList([
+            ...[code !== null && map[code]].flat().filter(value => is(value)),
+            ...[code !== null && map.null].flat().filter(value => is(value))
+          ])(code)
+        }
       }
 
       /**
@@ -439,9 +463,9 @@ class Lexer {
           const { context, disabled, effects } = self
           const { name, partial, previous, test, tokenize } = construct
 
-          current = construct
+          currentConstruct = construct
 
-          if (!partial) context.construct = construct
+          if (!partial) context.currentConstruct = construct
           if (fail) self.store()
 
           context.interrupt = interrupt
@@ -468,7 +492,7 @@ class Lexer {
         self.debug('ok: `%o`', code)
 
         self.consumed = true
-        onreturn(current)
+        onreturn(currentConstruct)
 
         return succ
       }
@@ -700,7 +724,7 @@ class Lexer {
     assert(this.lastToken, 'expected last token')
 
     this.reader.read(this.lastIndex - this.reader.index)
-    this.context.construct = this.lastConstruct
+    this.context.currentConstruct = this.lastConstruct
     this.events.length = this.lastEvent
     this.tail = this.lastToken
     this.tail.next = undefined
@@ -718,7 +742,7 @@ class Lexer {
    * @return {undefined} Nothing
    */
   protected store(): undefined {
-    this.lastConstruct = this.context.construct
+    this.lastConstruct = this.context.currentConstruct
     this.lastEvent = this.events.length
     this.lastIndex = this.reader.index
     this.lastToken = this.tail

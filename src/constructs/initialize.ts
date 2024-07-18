@@ -4,98 +4,64 @@
  */
 
 import { tt } from '#src/enums'
-import type {
-  Construct,
-  InitialConstruct,
-  TokenizeContext
-} from '#src/interfaces'
-import type { Effects, State } from '#src/types'
-import type { Code } from '@flex-development/vfile-reader'
+import type { InitialConstruct, TokenizeContext } from '#src/interfaces'
+import type { Constructs, Effects, State } from '#src/types'
+import { codes, type Code } from '@flex-development/vfile-reader'
 import eof from './eof'
 
 /**
- * Initialization construct.
+ * Create an initial construct.
  *
- * @const {InitialConstruct} initialize
+ * @see {@linkcode Constructs}
+ * @see {@linkcode InitialConstruct}
+ *
+ * @param {Constructs} constructs - Construct(s) to try
+ * @return {InitialConstruct} Initial construct
  */
-const initialize: InitialConstruct = {
-  /**
-   * Construct name.
-   */
-  name: 'vfile-lexer:initialize',
-
-  /**
-   * Set up a state machine to handle character codes streaming in.
-   *
-   * @see {@linkcode Effects}
-   * @see {@linkcode State}
-   * @see {@linkcode TokenizeContext}
-   *
-   * @this {TokenizeContext}
-   *
-   * @param {Effects} effects - Context object to transition state machine
-   * @return {State} Initial state
-   */
-  tokenize(this: TokenizeContext, effects: Effects): State {
+function initialize(constructs: Constructs): InitialConstruct {
+  return {
     /**
-     * Tokenize context.
-     *
-     * @const {TokenizeContext} self
+     * Construct name.
      */
-    const self: TokenizeContext = this
+    name: 'vfile-lexer:initialize',
 
     /**
-     * List of constructs.
+     * Set up a state machine to handle character codes streaming in.
      *
-     * @const {Construct[]} constructs
-     */
-    const constructs: Construct[] = [eof, ...self.constructs]
-
-    /**
-     * Try to tokenize a list of constructs.
+     * @see {@linkcode Effects}
+     * @see {@linkcode State}
+     * @see {@linkcode TokenizeContext}
      *
-     * @var {State} state
-     */
-    let state: State = effects.attempt(constructs, succ, fail)
-
-    void (effects.enter(tt.sof), effects.exit(tt.sof))
-    return succ
-
-    /**
-     * Eat `code`.
+     * @this {TokenizeContext}
      *
-     * @param {Code} code - Current character code
-     * @return {State | undefined} Next state
+     * @param {Effects} effects - Context object to transition state machine
+     * @return {State} Initial state
      */
-    function eat(code: Code): State | undefined {
-      return effects.consume(code), state
-    }
+    tokenize(this: TokenizeContext, effects: Effects): State {
+      void (effects.enter(tt.sof), effects.exit(tt.sof))
+      return state
 
-    /**
-     * Try tokenizing the next construct, and move onto the next character code
-     * if all constructs fail.
-     *
-     * @param {Code} code - Current character code
-     * @return {State | undefined} Next state
-     */
-    function fail(code: Code): State | undefined {
-      return effects.attempt(
-        constructs,
-        succ,
-        constructs.indexOf(self.construct!) === constructs.length - 1
-          ? eat
-          : fail
-      )(code)
-    }
+      /**
+       * Consume `code` and try tokenizing the next construct.
+       *
+       * @param {Code} code - Current character code
+       * @return {State | undefined} Next state
+       */
+      function eat(code: Code): State | undefined {
+        return code === codes.eof
+          ? effects.attempt(eof)(code)
+          : (effects.consume(code), state)
+      }
 
-    /**
-     * Try tokenizing the next construct.
-     *
-     * @param {Code} code - Current character code
-     * @return {State | undefined} Next state
-     */
-    function succ(code: Code): State | undefined {
-      return (state = effects.attempt(constructs, succ, fail))(code)
+      /**
+       * Try to tokenize a construct.
+       *
+       * @param {Code} code - Current character code
+       * @return {State | undefined} Next state
+       */
+      function state(code: Code): State | undefined {
+        return effects.attempt(constructs, state, eat)(code)
+      }
     }
   }
 }

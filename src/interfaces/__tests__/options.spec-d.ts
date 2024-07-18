@@ -3,18 +3,17 @@
  * @module vfile-lexer/interfaces/tests/unit-d/Options
  */
 
-import type { FinalizeContext, TokenFactory } from '#src/types'
+import type { Constructs, FinalizeContext, TokenFactory } from '#src/types'
 import type { Nilable } from '@flex-development/tutils'
 import type { Point } from '@flex-development/vfile-reader'
-import type Construct from '../construct'
 import type InitialConstruct from '../construct-initial'
 import type TestSubject from '../options'
 
 describe('unit-d:interfaces/Options', () => {
-  it('should match [constructs?: readonly Construct[] | null | undefined]', () => {
+  it('should match [constructs?: Constructs | null | undefined]', () => {
     expectTypeOf<TestSubject>()
       .toHaveProperty('constructs')
-      .toEqualTypeOf<Nilable<readonly Construct[]>>()
+      .toEqualTypeOf<Nilable<Constructs>>()
   })
 
   it('should match [context?: FinalizeContext | null | undefined]', () => {
