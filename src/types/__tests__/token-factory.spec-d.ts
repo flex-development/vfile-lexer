@@ -3,16 +3,15 @@
  * @module vfile-lexer/types/tests/unit-d/TokenFactory
  */
 
-import type { Token } from '#src/interfaces'
+import type { Token, TokenInfo } from '#src/interfaces'
 import type TestSubject from '../token-factory'
-import type TokenFields from '../token-fields'
 import type TokenType from '../token-type'
 
 describe('unit-d:types/TokenFactory', () => {
   describe('parameters', () => {
-    it('should be callable with [TokenType, TokenFields]', () => {
+    it('should be callable with [TokenType, TokenInfo]', () => {
       // Arrange
-      type P = [TokenType, TokenFields]
+      type P = [TokenType, TokenInfo]
 
       // Expect
       expectTypeOf<TestSubject>().parameters.toEqualTypeOf<P>()

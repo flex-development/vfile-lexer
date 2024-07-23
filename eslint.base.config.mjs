@@ -1043,7 +1043,8 @@ export default [
       'unicorn/no-useless-undefined': 0,
       'unicorn/prefer-at': 0,
       'unicorn/prefer-dom-node-append': 0,
-      'unicorn/string-content': 0
+      'unicorn/string-content': 0,
+      'unicorn/text-encoding-identifier-case': 0
     }
   },
   {

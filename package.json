@@ -73,14 +73,14 @@
     "typecheck:watch": "vitest --mode=typecheck --typecheck"
   },
   "dependencies": {
+    "@flex-development/unist-util-builder": "2.0.0",
     "@flex-development/unist-util-types": "1.6.1",
-    "@flex-development/vfile-reader": "3.1.2",
+    "@flex-development/vfile-location": "1.1.0",
     "@types/debug": "4.1.12",
     "@types/unist": "3.0.2",
     "debug": "4.3.5",
     "devlop": "1.1.0",
-    "micromark-util-chunked": "2.0.0",
-    "vfile": "6.0.1"
+    "micromark-util-chunked": "2.0.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.15.3",
@@ -96,8 +96,7 @@
     "@flex-development/mlly": "1.0.0-alpha.18",
     "@flex-development/pathe": "2.0.0",
     "@flex-development/tutils": "6.0.0-alpha.25",
-    "@flex-development/unist-util-builder": "2.0.0",
-    "@flex-development/unist-util-inspect": "1.0.0",
+    "@flex-development/unist-util-inspect": "1.0.1",
     "@stylistic/eslint-plugin": "2.2.2",
     "@types/chai": "4.3.16",
     "@types/eslint": "8.56.10",
@@ -135,6 +134,7 @@
     "is-ci": "3.0.1",
     "jsonc-eslint-parser": "2.4.0",
     "lint-staged": "15.2.7",
+    "micromark-core-commonmark": "2.0.1",
     "micromark-util-character": "2.1.0",
     "node-notifier": "10.0.1",
     "prettier": "3.3.2",
@@ -148,6 +148,7 @@
     "ts-dedent": "2.2.0",
     "typescript": "5.5.2",
     "typescript-eslint": "8.0.0-alpha.30",
+    "vfile": "6.0.2",
     "vite-tsconfig-paths": "4.3.2",
     "vitest": "2.0.0-beta.11",
     "yaml-eslint-parser": "1.2.3"

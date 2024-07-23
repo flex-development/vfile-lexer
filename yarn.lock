@@ -1680,23 +1680,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@flex-development/unist-util-inspect@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@flex-development/unist-util-inspect@npm:1.0.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40flex-development%2Funist-util-inspect%2F1.0.0%2F2585616dd8111de66e7ddc2d846a5e077c57c982"
+"@flex-development/unist-util-inspect@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@flex-development/unist-util-inspect@npm:1.0.1::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40flex-development%2Funist-util-inspect%2F1.0.1%2F62e4316a7ec1359ea377db40bd063dc83808b75e"
   dependencies:
-    "@flex-development/unist-util-stringify-position": "npm:1.0.0"
+    "@flex-development/unist-util-stringify-position": "npm:1.0.1"
     "@types/unist": "npm:3.0.2"
-  checksum: 10/c1b81c3191e2be2bbbcff95f1a2e99afe4360cd72eebbe0b5401499fd9c89c9fa2e42adc7f875fbc7a6204bb75d33a2ad7f0b53a19bca4547182d784143a21d8
+  checksum: 10/9d4da80d5be62ead6afff50c07a2587c5bf5f51bb3432b38f74863a6b55d0e4c9e854b4f73f1a98746b2c9409e5cc76f40cfe85ba0c7eb634ba825f39eb536dc
   languageName: node
   linkType: hard
 
-"@flex-development/unist-util-stringify-position@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@flex-development/unist-util-stringify-position@npm:1.0.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40flex-development%2Funist-util-stringify-position%2F1.0.0%2Fb2a5cbc97f53cee6e215f15a908a78109e543b48"
+"@flex-development/unist-util-stringify-position@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@flex-development/unist-util-stringify-position@npm:1.0.1::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40flex-development%2Funist-util-stringify-position%2F1.0.1%2F573c6a592094d914733e4491a7a68de42c196c8f"
   dependencies:
     "@flex-development/unist-util-types": "npm:1.6.1"
     "@types/unist": "npm:3.0.2"
-  checksum: 10/085cfe2ce2398c1aa0f986ea54789a1cb1df69a348af7f2e013a443fd5672c76c8d2764cacefa0babe9545ed63a623876e0eb2c989a9516dad55e216d5bb9a53
+  checksum: 10/86410dc2984ecfb60f2db63d114b1929b056acf09e38dc822aea6b6dbcf92ebfd6e52f59d2392e10d9b60579e65fd21c740061943ffbb56e82d896d78c9ed5a1
   languageName: node
   linkType: hard
 
@@ -1727,9 +1727,9 @@ __metadata:
     "@flex-development/pathe": "npm:2.0.0"
     "@flex-development/tutils": "npm:6.0.0-alpha.25"
     "@flex-development/unist-util-builder": "npm:2.0.0"
-    "@flex-development/unist-util-inspect": "npm:1.0.0"
+    "@flex-development/unist-util-inspect": "npm:1.0.1"
     "@flex-development/unist-util-types": "npm:1.6.1"
-    "@flex-development/vfile-reader": "npm:3.1.2"
+    "@flex-development/vfile-location": "npm:1.1.0"
     "@stylistic/eslint-plugin": "npm:2.2.2"
     "@types/chai": "npm:4.3.16"
     "@types/debug": "npm:4.1.12"
@@ -1771,8 +1771,10 @@ __metadata:
     is-ci: "npm:3.0.1"
     jsonc-eslint-parser: "npm:2.4.0"
     lint-staged: "npm:15.2.7"
+    micromark-core-commonmark: "npm:2.0.1"
     micromark-util-character: "npm:2.1.0"
     micromark-util-chunked: "npm:2.0.0"
+    micromark-util-subtokenize: "npm:2.0.1"
     node-notifier: "npm:10.0.1"
     prettier: "npm:3.3.2"
     remark: "npm:15.0.1"
@@ -1785,32 +1787,21 @@ __metadata:
     ts-dedent: "npm:2.2.0"
     typescript: "npm:5.5.2"
     typescript-eslint: "npm:8.0.0-alpha.30"
-    vfile: "npm:6.0.1"
+    vfile: "npm:6.0.2"
     vite-tsconfig-paths: "npm:4.3.2"
     vitest: "npm:2.0.0-beta.11"
     yaml-eslint-parser: "npm:1.2.3"
   languageName: unknown
   linkType: soft
 
-"@flex-development/vfile-location@npm:1.0.2":
-  version: 1.0.2
-  resolution: "@flex-development/vfile-location@npm:1.0.2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40flex-development%2Fvfile-location%2F1.0.2%2Fb341b4a1817c124f2e2592815d00f6cbe408413c"
+"@flex-development/vfile-location@npm:1.1.0":
+  version: 1.1.0
+  resolution: "@flex-development/vfile-location@npm:1.1.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40flex-development%2Fvfile-location%2F1.1.0%2F3cb3d9ff81e6a56c0e5e50048701f90db0eb80e0"
   dependencies:
     "@flex-development/unist-util-types": "npm:1.6.1"
     "@types/unist": "npm:3.0.2"
-    vfile: "npm:6.0.1"
-  checksum: 10/9dd588ee62c045f9d170afdcf6a9e62bb05511fcdbe51bf820d76b4f756086c4f1fe1b754b8b453874aadbbfa85672ee008bb7d7974b3e49c6bf57210cdd1a79
-  languageName: node
-  linkType: hard
-
-"@flex-development/vfile-reader@npm:3.1.2":
-  version: 3.1.2
-  resolution: "@flex-development/vfile-reader@npm:3.1.2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40flex-development%2Fvfile-reader%2F3.1.2%2Fda7a996737f030cf015064ad94c17dd875b2465e"
-  dependencies:
-    "@flex-development/unist-util-types": "npm:1.6.1"
-    "@flex-development/vfile-location": "npm:1.0.2"
-    vfile: "npm:6.0.1"
-  checksum: 10/9480de3863a4b088a4de34fc804078aae2d00692a352e588dd2a412380202f47290f46ba61ee14a47009e005680deddf2a3b1c5ab071341b0a8ec06d133cc4ba
+    vfile: "npm:6.0.2"
+  checksum: 10/3f217ede58e7f8855b412e7f25f78983a4c5e4256c1c3ab330efc7f8dbe0e30ca6983944950c1ac3b74081afba2d23688efef264c9e11bae796593ec85921c52
   languageName: node
   linkType: hard
 
@@ -7143,9 +7134,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micromark-core-commonmark@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "micromark-core-commonmark@npm:2.0.0"
+"micromark-core-commonmark@npm:2.0.1, micromark-core-commonmark@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "micromark-core-commonmark@npm:2.0.1"
   dependencies:
     decode-named-character-reference: "npm:^1.0.0"
     devlop: "npm:^1.0.0"
@@ -7163,7 +7154,7 @@ __metadata:
     micromark-util-subtokenize: "npm:^2.0.0"
     micromark-util-symbol: "npm:^2.0.0"
     micromark-util-types: "npm:^2.0.0"
-  checksum: 10/67f6e2f062f42a7ae21e8a409f3663843703a830ff27cf0f41cb0fb712c58e55409db428531d8124c4ef8d698cd81e7eb41485d24b8c352d2f0c06b535865367
+  checksum: 10/15e788b3222401572ff8f549f8ecba21fa3395c000b8005e47204e8c97200e98bb0652c2c648e357b0996f1b50a7a63cc43e849f2976e4845b4453049040f8cc
   languageName: node
   linkType: hard
 
@@ -7556,15 +7547,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micromark-util-subtokenize@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "micromark-util-subtokenize@npm:2.0.0"
+"micromark-util-subtokenize@npm:2.0.1, micromark-util-subtokenize@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "micromark-util-subtokenize@npm:2.0.1"
   dependencies:
     devlop: "npm:^1.0.0"
     micromark-util-chunked: "npm:^2.0.0"
     micromark-util-symbol: "npm:^2.0.0"
     micromark-util-types: "npm:^2.0.0"
-  checksum: 10/4d209894f9400ff73e093a4ce3d13870cd1f546b47e50355f849c4402cecd5d2039bd63bb624f2a09aaeba01a847634088942edb42f141e4869b3a85281cf64e
+  checksum: 10/8e1cae8859bcc3eed54c0dc896d9c2141c990299696455124205ce538e084caeaafcbe0d459a39b81cd45e761ff874d773dbf235ab6825914190701a15226789
   languageName: node
   linkType: hard
 
@@ -10280,14 +10271,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vfile@npm:6.0.1, vfile@npm:^6.0.0, vfile@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "vfile@npm:6.0.1"
+"vfile@npm:6.0.2, vfile@npm:^6.0.0, vfile@npm:^6.0.1":
+  version: 6.0.2
+  resolution: "vfile@npm:6.0.2"
   dependencies:
     "@types/unist": "npm:^3.0.0"
     unist-util-stringify-position: "npm:^4.0.0"
     vfile-message: "npm:^4.0.0"
-  checksum: 10/7f8412f9ce7709d3be4041fd68a159e2cf96f9c9a4f095bcb18d1561009757b8efb37b71d0ae087e5202fe0e3b3162aae0adf92e30e2448a45645912c23c4ab2
+  checksum: 10/8c36b4887b071aa9215a16c96916e96e75f3f3516cb87fa7ba1ec79fda3a1d87b66068e56b73f01c249b8fefa897dc52e3a6c736fd1053133ad3920f33482756
   languageName: node
   linkType: hard
 

@@ -4,17 +4,21 @@
  */
 
 import type { TokenizeContext } from '#src/interfaces'
+import type Lexer from '#src/lexer'
 
 /**
  * Finalize the tokenization context.
  *
  * @see {@linkcode TokenizeContext}
  *
- * @param {TokenizeContext} context - Base context
- * @return {TokenizeContext | null | undefined | void} Final context
+ * @this {Lexer}
+ *
+ * @param {TokenizeContext} base - Base context
+ * @return {TokenizeContext | null | undefined} Final context
  */
 type FinalizeContext = (
+  this: Lexer,
   base: TokenizeContext
-) => TokenizeContext | null | undefined | void
+) => TokenizeContext | null | undefined
 
 export type { FinalizeContext as default }

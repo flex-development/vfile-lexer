@@ -3,8 +3,10 @@
  * @module tests/constructs
  */
 
-export { default as inlineTag } from './inline-tag'
-export { default as numeric } from './numeric'
-export { default as punctuator } from './punctuator'
-export { default as string } from './string'
-export { default as ws } from './ws'
+export { default as codeFenced } from './code-fenced'
+export { default as codeText } from './code-text'
+export { default as eof } from './eof'
+export { default as htmlFlow } from './html-flow'
+export { default as lineEnding } from './line-ending'
+export { default as micromark } from './micromark'
+export { default as typeMetadata } from './type-metadata'

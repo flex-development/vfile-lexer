@@ -3,74 +3,77 @@
  * @module vfile-lexer/tests/integration/tokenize
  */
 
-import tk from '#fixtures/tk'
+import tt from '#fixtures/tt'
 import { initialize } from '#src/constructs'
-import type { Options } from '#src/interfaces'
-import { inlineTag, numeric, punctuator, string, ws } from '#tests/constructs'
-import token from '#tests/utils/token'
-import { identity } from '@flex-development/tutils'
-import { codes } from '@flex-development/vfile-reader'
+import { chars } from '#src/enums'
+import type {
+  Encoding,
+  FileLike,
+  TokenizeOptions,
+  Value
+} from '#src/types'
+import { resolveSlice } from '#src/utils'
+import {
+  codeFenced,
+  codeText,
+  eof,
+  lineEnding,
+  micromark,
+  typeMetadata
+} from '#tests/constructs'
+import finalizeContext from '#tests/utils/finalize-context'
+import list from '#tests/utils/list'
 import { readSync as read } from 'to-vfile'
-import type { VFile, Value } from 'vfile'
-import type Lexer from '../lexer'
 import testSubject from '../tokenize'
 
 describe('integration:tokenize', () => {
-  let run: (file: Value | VFile, options?: Partial<Options> | null) => Lexer
+  it.each<[
+    value?: FileLike | Value | null | undefined,
+    options?: TokenizeOptions | null | undefined
+  ]>([
+    [],
+    [chars.nul, { nul: false }],
+    [read('__fixtures__/markdown/empty.md')],
+    [read('__fixtures__/markdown/code-fenced.md')]
+  ])('should work without constructs (%#)', (value, options) => {
+    // Act
+    const result = testSubject(value, options)
 
-  beforeAll(() => {
-    run = (file, options) => testSubject(file, { ...options, token })
+    // Expect
+    expect(result).to.be.an('array').that.is.empty
+    expect(list(result)).to.have.ordered.members(list(result[0]?.[1]))
   })
 
-  describe('default constructs', () => {
-    it('should tokenize empty file', () => {
-      expect(run('', { constructs: [ws] }).head).toMatchSnapshot()
-    })
-
-    it('should tokenize non-empty file', () => {
-      expect(run(read('__fixtures__/tk.ts')).head).toMatchSnapshot()
-    })
-  })
-
-  describe('user constructs', () => {
-    it('should tokenize empty file', () => {
-      expect(run('', {
-        constructs: [
-          inlineTag,
-          numeric,
-          punctuator,
-          string,
-          ws
-        ]
-      }).head).toMatchSnapshot()
-    })
-
-    describe('non-empty file', () => {
-      it.each<[VFile, (Partial<Options> | null | undefined)?]>([
-        [read('__fixtures__/inline-tag.txt'), {
-          constructs: {
-            [codes.cr]: ws,
-            [codes.leftBrace]: inlineTag,
-            [codes.lf]: ws,
-            [codes.space]: ws
-          },
-          context: vi.fn(),
-          disabled: [tk.whitespace]
-        }],
-        [read('__fixtures__/hello.txt'), {
-          constructs: [string, punctuator],
-          context: vi.fn(identity),
-          initialize: Object.assign(initialize([string, punctuator]), {
-            resolveAll: vi.fn(identity)
-          })
-        }],
-        [read('__fixtures__/strings.txt'), {
-          constructs: [string, punctuator]
-        }],
-        [read('__fixtures__/numerics.txt'), { constructs: [numeric, ws] }]
-      ])('sample %#', (file, options) => {
-        expect(run(file, options).head).toMatchSnapshot()
+  it.each<[
+    value: FileLike | Value,
+    encoding: Encoding | null | undefined,
+    options?: TokenizeOptions | null | undefined
+  ]>([
+    [chars.lf + chars.cr + chars.crlf, null, { constructs: lineEnding }],
+    [read('__fixtures__/type-metadata.txt'), 'utf8', {
+      disabled: [tt.eof],
+      initialize: Object.assign(initialize([typeMetadata, eof]), {
+        resolveAll: resolveSlice
       })
-    })
+    }],
+    [read('__fixtures__/markdown/code-indented.md'), null, {
+      constructs: micromark,
+      finalizeContext
+    }],
+    [read('__fixtures__/markdown/code-text.md'), 'utf8', {
+      constructs: [codeFenced, codeText, eof]
+    }],
+    [read('__fixtures__/markdown/html-flow.md'), null, {
+      constructs: micromark,
+      finalizeContext
+    }]
+  ])('should work with constructs (%#)', (value, encoding, options) => {
+    // Act
+    const result = testSubject(value, encoding, options)
+
+    // Expect
+    expect(result).to.be.an('array').that.is.not.empty
+    expect(list(result)).to.have.ordered.members(list(result[0]?.[1]))
+    expect(result[0]![1]).toMatchSnapshot()
   })
 })
