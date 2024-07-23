@@ -1253,10 +1253,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@faker-js/faker@npm:9.0.0-alpha.0":
-  version: 9.0.0-alpha.0
-  resolution: "@faker-js/faker@npm:9.0.0-alpha.0"
-  checksum: 10/e9bb4b32ec170be4bb484826d221de6bfd3a515f57bb9d9f7f6e24816187399dd17d1527a8b4d0f02f891c1fac6d8751f0ab0d0d8d6a9854309ab3102e1267cd
+"@faker-js/faker@npm:9.0.0-rc.0":
+  version: 9.0.0-rc.0
+  resolution: "@faker-js/faker@npm:9.0.0-rc.0"
+  checksum: 10/6272e69c34e793b9e897b269e29e3aadd0d90850b6c4c9fcba6ec1fb9b4a1b32e40092ee77a4ddbe3dc36ea84148cad6d040a7f19e76fdf507b54a903aa5675e
   languageName: node
   linkType: hard
 
@@ -1717,7 +1717,7 @@ __metadata:
     "@commitlint/cli": "npm:19.3.0"
     "@commitlint/types": "npm:19.0.3"
     "@eslint/js": "npm:9.5.0"
-    "@faker-js/faker": "npm:9.0.0-alpha.0"
+    "@faker-js/faker": "npm:9.0.0-rc.0"
     "@flex-development/commitlint-config": "npm:1.0.1"
     "@flex-development/decorator-regex": "npm:2.0.0"
     "@flex-development/esm-types": "npm:2.0.0"
@@ -1774,7 +1774,6 @@ __metadata:
     micromark-core-commonmark: "npm:2.0.1"
     micromark-util-character: "npm:2.1.0"
     micromark-util-chunked: "npm:2.0.0"
-    micromark-util-subtokenize: "npm:2.0.1"
     node-notifier: "npm:10.0.1"
     prettier: "npm:3.3.2"
     remark: "npm:15.0.1"
@@ -7547,7 +7546,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micromark-util-subtokenize@npm:2.0.1, micromark-util-subtokenize@npm:^2.0.0":
+"micromark-util-subtokenize@npm:^2.0.0":
   version: 2.0.1
   resolution: "micromark-util-subtokenize@npm:2.0.1"
   dependencies:
