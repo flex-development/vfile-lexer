@@ -90,6 +90,6 @@ ignore:
 
 profiling:
   critical_files_paths:
-    - src/constructs/eof.ts
     - src/constructs/initialize.ts
     - src/lexer.ts
+    - src/preprocess.ts

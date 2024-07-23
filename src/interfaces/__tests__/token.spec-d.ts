@@ -4,12 +4,12 @@
  */
 
 import type { TokenType } from '#src/types'
-import type { Position } from '@flex-development/vfile-reader'
 import type TestSubject from '../token'
+import type TokenInfo from '../token-info'
 
 describe('unit-d:interfaces/Token', () => {
-  it('should extend Position', () => {
-    expectTypeOf<TestSubject>().toMatchTypeOf<Position>()
+  it('should extend TokenInfo', () => {
+    expectTypeOf<TestSubject>().toMatchTypeOf<TokenInfo>()
   })
 
   it('should match [next?: Token | undefined]', () => {

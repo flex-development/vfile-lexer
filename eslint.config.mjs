@@ -18,19 +18,25 @@ export default [
       '!**/typings/**/dist/',
       '**/.yarn/',
       '**/coverage/',
-      '**/dist/',
-      '__fixtures__/underscore-1.5.2.js'
+      '**/dist/'
     ]
   },
   {
-    files: [
-      '__tests__/constructs/inline-tag.ts',
-      '__tests__/constructs/string.ts',
-      'src/constructs/initialize.ts',
-      'src/lexer.ts'
-    ],
+    files: ['__tests__/constructs/type-metadata.ts', 'src/lexer.ts'],
     rules: {
       'unicorn/no-this-assignment': 0
+    }
+  },
+  {
+    files: ['src/enums/codes.ts'],
+    rules: {
+      'sort-keys': 0
+    }
+  },
+  {
+    files: ['src/types/encoding.ts'],
+    rules: {
+      'unicorn/text-encoding-identifier-case': 0
     }
   }
 ]

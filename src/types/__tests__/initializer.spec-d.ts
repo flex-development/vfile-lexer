@@ -3,8 +3,7 @@
  * @module vfile-lexer/types/tests/unit-d/Initializer
  */
 
-import type { TokenizeContext } from '#src/interfaces'
-import type Effects from '../effects'
+import type { Effects, TokenizeContext } from '#src/interfaces'
 import type TestSubject from '../initializer'
 import type State from '../state'
 

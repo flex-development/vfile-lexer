@@ -56,7 +56,7 @@ function nodes(token: Token): (Literal | Node)[] {
      * @const {Literal | Node} node
      */
     const node: Literal | Node = u(tok.type, {
-      ...omit(tok, ['end', 'next', 'previous', 'start']),
+      ...omit({ ...tok }, ['end', 'next', 'previous', 'start']),
       position: { end: tok.end, start: tok.start }
     })
 

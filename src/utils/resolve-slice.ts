@@ -18,13 +18,13 @@ import type { Event } from '#src/types'
  * @see {@linkcode Event}
  * @see {@linkcode TokenizeContext}
  *
- * @param {ReadonlyArray<Event>} events - List of events
+ * @param {Event[]} events - List of events
  * @param {Partial<TokenizeContext>} context - Tokenize context
  * @param {(string | null | undefined)?} [field] - Token field
  * @return {Event[]} Changed events
  */
 function resolveSlice(
-  events: readonly Event[],
+  events: Event[],
   context: Partial<TokenizeContext>,
   field?: string | null | undefined
 ): Event[] {
@@ -47,7 +47,7 @@ function resolveSlice(
     }
   }
 
-  return [...events]
+  return events
 }
 
 export default resolveSlice

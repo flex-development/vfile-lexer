@@ -13,14 +13,14 @@ import type { Event, Resolver } from '#src/types'
  * @see {@linkcode Event}
  * @see {@linkcode TokenizeContext}
  *
- * @param {ReadonlyArray<Partial<Construct>>} constructs - List of constructs
- * @param {ReadonlyArray<Event>} events - List of events
+ * @param {Partial<Construct>[]} constructs - List of constructs
+ * @param {Event[]} events - List of events
  * @param {TokenizeContext} context - Tokenize context
  * @return {Event[]} Changed events
  */
 function resolveAll(
-  constructs: readonly Partial<Construct>[],
-  events: readonly Event[],
+  constructs: Partial<Construct>[],
+  events: Event[],
   context: TokenizeContext
 ): Event[] {
   /**
@@ -46,12 +46,12 @@ function resolveAll(
     const resolve: Resolver | null | undefined = constructs[i]!.resolveAll
 
     if (resolve && !called.includes(resolve)) {
-      events = resolve([...events], context)
+      events = resolve(events, context)
       called.push(resolve)
     }
   }
 
-  return [...events]
+  return events
 }
 
 export default resolveAll

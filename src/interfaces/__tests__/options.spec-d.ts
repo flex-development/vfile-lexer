@@ -3,9 +3,14 @@
  * @module vfile-lexer/interfaces/tests/unit-d/Options
  */
 
-import type { Constructs, FinalizeContext, TokenFactory } from '#src/types'
+import type {
+  CodeCheck,
+  Constructs,
+  FinalizeContext,
+  TokenFactory
+} from '#src/types'
 import type { Nilable } from '@flex-development/tutils'
-import type { Point } from '@flex-development/vfile-reader'
+import type { Point } from '@flex-development/vfile-location'
 import type InitialConstruct from '../construct-initial'
 import type TestSubject from '../options'
 
@@ -14,12 +19,6 @@ describe('unit-d:interfaces/Options', () => {
     expectTypeOf<TestSubject>()
       .toHaveProperty('constructs')
       .toEqualTypeOf<Nilable<Constructs>>()
-  })
-
-  it('should match [context?: FinalizeContext | null | undefined]', () => {
-    expectTypeOf<TestSubject>()
-      .toHaveProperty('context')
-      .toEqualTypeOf<Nilable<FinalizeContext>>()
   })
 
   it('should match [debug?: string | null | undefined]', () => {
@@ -34,6 +33,18 @@ describe('unit-d:interfaces/Options', () => {
       .toEqualTypeOf<Nilable<readonly string[]>>()
   })
 
+  it('should match [eol?: CodeCheck | null | undefined]', () => {
+    expectTypeOf<TestSubject>()
+      .toHaveProperty('eol')
+      .toEqualTypeOf<Nilable<CodeCheck>>()
+  })
+
+  it('should match [finalizeContext?: FinalizeContext | null | undefined]', () => {
+    expectTypeOf<TestSubject>()
+      .toHaveProperty('finalizeContext')
+      .toEqualTypeOf<Nilable<FinalizeContext>>()
+  })
+
   it('should match [from?: Point | null | undefined]', () => {
     expectTypeOf<TestSubject>()
       .toHaveProperty('from')
@@ -46,9 +57,9 @@ describe('unit-d:interfaces/Options', () => {
       .toEqualTypeOf<Nilable<InitialConstruct>>()
   })
 
-  it('should match [token: TokenFactory]', () => {
+  it('should match [token?: TokenFactory | null | undefined]', () => {
     expectTypeOf<TestSubject>()
       .toHaveProperty('token')
-      .toEqualTypeOf<TokenFactory>()
+      .toEqualTypeOf<Nilable<TokenFactory>>()
   })
 })
