@@ -3,8 +3,6 @@
  * @module vfile-lexer/interfaces/TokenTypeMap
  */
 
-import type { tt } from '#src/enums'
-
 /**
  * Token type registry.
  *
@@ -13,13 +11,10 @@ import type { tt } from '#src/enums'
  * @example
  *  declare module '@flex-development/vfile-lexer' {
  *    interface TokenTypeMap {
- *      type: TokenType
+ *      whitespace: tt.whitespace
  *    }
  *  }
  */
-interface TokenTypeMap {
-  eof: tt.eof
-  sof: tt.sof
-}
+interface TokenTypeMap {}
 
 export type { TokenTypeMap as default }

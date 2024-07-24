@@ -3,7 +3,7 @@
  * @module vfile-lexer/types/tests/unit-d/Constructs
  */
 
-import type ConstructRecord from '../construct-record'
+import type { ConstructRecord } from '#src/interfaces'
 import type TestSubject from '../constructs'
 import type RecordConstructs from '../constructs-record'
 

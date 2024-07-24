@@ -3,13 +3,13 @@
  * @module vfile-lexer/types/tests/unit-d/Event
  */
 
-import type tk from '#fixtures/tk'
+import type tt from '#fixtures/tt'
 import type { Token, TokenizeContext } from '#src/interfaces'
 import type TestSubject from '../event'
 import type EventType from '../event-type'
 
 describe('unit-d:types/Event', () => {
-  type T = tk.whitespace
+  type T = tt.typeMetadata
   type Subject = TestSubject<T>
 
   it('should match [0: EventType]', () => {

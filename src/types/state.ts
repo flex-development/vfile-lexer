@@ -3,7 +3,7 @@
  * @module vfile-lexer/types/State
  */
 
-import type { Code } from '@flex-development/vfile-reader'
+import type Code from './code'
 
 /**
  * The main unit in the state machine: a function that gets a character code and

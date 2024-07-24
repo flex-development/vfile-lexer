@@ -3,7 +3,7 @@
  * @module tests/utils/isPoint
  */
 
-import type { Point } from '@flex-development/vfile-reader'
+import type { Point } from '@flex-development/vfile-location'
 
 /**
  * Check if the specified `value` is a point.

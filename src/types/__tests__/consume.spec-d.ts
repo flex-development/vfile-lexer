@@ -3,7 +3,7 @@
  * @module vfile-lexer/types/tests/unit-d/Consume
  */
 
-import type { Code } from '@flex-development/vfile-reader'
+import type Code from '../code'
 import type TestSubject from '../consume'
 
 describe('unit-d:types/Consume', () => {

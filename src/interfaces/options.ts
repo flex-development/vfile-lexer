@@ -3,8 +3,14 @@
  * @module vfile-lexer/interfaces/Options
  */
 
-import type { Constructs, FinalizeContext, TokenFactory } from '#src/types'
-import type { Point } from '@flex-development/vfile-reader'
+import type {
+  CodeCheck,
+  Constructs,
+  FinalizeContext,
+  TokenFactory
+} from '#src/types'
+import type { u } from '@flex-development/unist-util-builder'
+import type { Point } from '@flex-development/vfile-location'
 import type InitialConstruct from './construct-initial'
 
 /**
@@ -19,13 +25,6 @@ interface Options {
   constructs?: Constructs | null | undefined
 
   /**
-   * Finalize the tokenization context.
-   *
-   * @see {@linkcode FinalizeContext}
-   */
-  context?: FinalizeContext | null | undefined
-
-  /**
    * Debug logger name.
    *
    * @default 'vfile-lexer'
@@ -38,6 +37,20 @@ interface Options {
   disabled?: readonly string[] | null | undefined
 
   /**
+   * Line ending code check.
+   *
+   * @see {@linkcode CodeCheck}
+   */
+  eol?: CodeCheck | null | undefined
+
+  /**
+   * Finalize the tokenization context.
+   *
+   * @see {@linkcode FinalizeContext}
+   */
+  finalizeContext?: FinalizeContext | null | undefined
+
+  /**
    * Point before first character in file.
    *
    * @see {@linkcode Point}
@@ -47,7 +60,7 @@ interface Options {
   from?: Point | null | undefined
 
   /**
-   * Initialization construct.
+   * Initial construct.
    *
    * @see {@linkcode InitialConstruct}
    */
@@ -57,8 +70,11 @@ interface Options {
    * Create a new token.
    *
    * @see {@linkcode TokenFactory}
+   * @see {@linkcode u}
+   *
+   * @default u
    */
-  token: TokenFactory
+  token?: TokenFactory | null | undefined
 }
 
 export type { Options as default }

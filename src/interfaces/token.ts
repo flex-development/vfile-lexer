@@ -3,8 +3,8 @@
  * @module vfile-lexer/interfaces/Token
  */
 
-import type { TokenType } from '#src/types'
-import type { Code, Position } from '@flex-development/vfile-reader'
+import type { Code, TokenType } from '#src/types'
+import type TokenInfo from './token-info'
 
 /**
  * A span of one (`1`) or more character codes.
@@ -26,14 +26,14 @@ import type { Code, Position } from '@flex-development/vfile-reader'
  *  }
  *
  * @see {@linkcode Code}
- * @see {@linkcode Position}
+ * @see {@linkcode TokenInfo}
  * @see {@linkcode TokenType}
  *
  * @template {TokenType} [T=TokenType] - Token type
  *
- * @extends {Position}
+ * @extends {TokenInfo}
  */
-interface Token<T extends TokenType = TokenType> extends Position {
+interface Token<T extends TokenType = TokenType> extends TokenInfo {
   /**
    * Next token in linked token list.
    */

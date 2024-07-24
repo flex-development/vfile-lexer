@@ -10,6 +10,6 @@ import type { Construct } from '#src/interfaces'
  *
  * @see {@linkcode Construct}
  */
-type RecordConstructs = Construct | Construct[] | readonly Construct[]
+type RecordConstructs = Construct | Construct[]
 
 export type { RecordConstructs as default }

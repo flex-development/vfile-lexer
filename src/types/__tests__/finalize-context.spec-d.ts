@@ -18,9 +18,9 @@ describe('unit-d:types/FinalizeContext', () => {
   })
 
   describe('returns', () => {
-    it('should return TokenizeContext | null | undefined | void', () => {
+    it('should return TokenizeContext | null | undefined', () => {
       // Arrange
-      type Expect = TokenizeContext | null | undefined | void
+      type Expect = TokenizeContext | null | undefined
 
       // Expect
       expectTypeOf<TestSubject>().returns.toEqualTypeOf<Expect>()
