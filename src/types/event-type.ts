@@ -3,13 +3,9 @@
  * @module vfile-lexer/types/Event
  */
 
-import type { ev } from '#src/enums'
-
 /**
  * Union of event types.
- *
- * @see {@linkcode ev}
  */
-type EventType = keyof typeof ev | ev
+type EventType = 'enter' | 'exit'
 
 export type { EventType as default }

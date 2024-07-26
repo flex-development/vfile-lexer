@@ -3,6 +3,7 @@
  * @module vfile-lexer/utils
  */
 
-export { chars, codes } from '@flex-development/vfile-reader'
+export { default as isLineEnding } from './is-line-ending'
 export { default as resolveAll } from './resolve-all'
 export { default as resolveSlice } from './resolve-slice'
+export { default as resolveTokenList } from './resolve-token-list'

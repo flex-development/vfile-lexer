@@ -3,11 +3,12 @@
  * @module vfile-lexer/constructs/initialize
  */
 
-import { tt } from '#src/enums'
-import type { InitialConstruct, TokenizeContext } from '#src/interfaces'
-import type { Constructs, Effects, State } from '#src/types'
-import { codes, type Code } from '@flex-development/vfile-reader'
-import eof from './eof'
+import type {
+  Effects,
+  InitialConstruct,
+  TokenizeContext
+} from '#src/interfaces'
+import type { Code, Constructs, State } from '#src/types'
 
 /**
  * Create an initial construct.
@@ -19,49 +20,41 @@ import eof from './eof'
  * @return {InitialConstruct} Initial construct
  */
 function initialize(constructs: Constructs): InitialConstruct {
-  return {
-    /**
-     * Construct name.
-     */
-    name: 'vfile-lexer:initialize',
+  return { name: 'vfile-lexer:initialize', tokenize }
+
+  /**
+   * Set up a state machine to handle character codes streaming in.
+   *
+   * @see {@linkcode Effects}
+   * @see {@linkcode State}
+   * @see {@linkcode TokenizeContext}
+   *
+   * @this {TokenizeContext}
+   *
+   * @param {Effects} effects - Context object to transition state machine
+   * @return {State} Initial state
+   */
+  function tokenize(this: TokenizeContext, effects: Effects): State {
+    return state
 
     /**
-     * Set up a state machine to handle character codes streaming in.
+     * Consume `code` and retry {@linkcode constructs}.
      *
-     * @see {@linkcode Effects}
-     * @see {@linkcode State}
-     * @see {@linkcode TokenizeContext}
-     *
-     * @this {TokenizeContext}
-     *
-     * @param {Effects} effects - Context object to transition state machine
-     * @return {State} Initial state
+     * @param {Code} code - Current character code
+     * @return {State | undefined} Next state
      */
-    tokenize(this: TokenizeContext, effects: Effects): State {
-      void (effects.enter(tt.sof), effects.exit(tt.sof))
-      return state
+    function eat(code: Code): State | undefined {
+      return effects.consume(code), state
+    }
 
-      /**
-       * Consume `code` and try tokenizing the next construct.
-       *
-       * @param {Code} code - Current character code
-       * @return {State | undefined} Next state
-       */
-      function eat(code: Code): State | undefined {
-        return code === codes.eof
-          ? effects.attempt(eof)(code)
-          : (effects.consume(code), state)
-      }
-
-      /**
-       * Try to tokenize a construct.
-       *
-       * @param {Code} code - Current character code
-       * @return {State | undefined} Next state
-       */
-      function state(code: Code): State | undefined {
-        return effects.attempt(constructs, state, eat)(code)
-      }
+    /**
+     * Try a construct.
+     *
+     * @param {Code} code - Current character code
+     * @return {State | undefined} Next state
+     */
+    function state(code: Code): State | undefined {
+      return effects.attempt(constructs, state, eat)(code)
     }
   }
 }

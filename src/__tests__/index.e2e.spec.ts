@@ -11,11 +11,13 @@ describe('e2e:vfile-lexer', () => {
       'Lexer',
       'chars',
       'codes',
-      'eof',
       'ev',
       'initialize',
+      'isLineEnding',
+      'preprocess',
       'resolveAll',
       'resolveSlice',
+      'resolveTokenList',
       'tokenize'
     ])
   })

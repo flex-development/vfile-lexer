@@ -3,65 +3,90 @@
  * @module vfile-lexer/lexer
  */
 
-import {
-  CodeReader as Reader,
-  codes,
-  type Code,
-  type Offset,
-  type Point
-} from '@flex-development/vfile-reader'
+import { u } from '@flex-development/unist-util-builder'
+import { Location } from '@flex-development/vfile-location'
 import debug from 'debug'
 import { ok as assert } from 'devlop'
-import { splice } from 'micromark-util-chunked'
-import type { VFile, Value } from 'vfile'
+import { push, splice } from 'micromark-util-chunked'
 import { initialize } from './constructs'
-import { ev } from './enums'
+import { chars, codes, ev } from './enums'
 import type {
   Construct,
+  ConstructRecord,
+  Effects,
   InitialConstruct,
   Options,
+  Place,
+  Point,
+  Position,
   Token,
+  TokenFields,
+  TokenInfo,
   TokenizeContext
 } from './interfaces'
+import preprocess from './preprocess'
 import type {
   Attempt,
-  ConstructRecord,
+  Chunk,
+  Code,
+  CodeCheck,
+  Column,
+  ConstructPack,
   Constructs,
-  Effects,
+  DefineSkip,
   Event,
+  Line,
+  Offset,
+  Preprocessor,
+  Resolver,
   ReturnHandle,
   State,
   TokenFactory,
-  TokenFields,
   TokenType
 } from './types'
-import { resolveAll } from './utils'
+import { isLineEnding, resolveAll } from './utils'
 
 /**
  * Source file tokenizer.
  *
+ * @see {@linkcode Location}
+ * @see {@linkcode TokenizeContext}
+ *
  * @class
+ * @extends {Location}
+ * @implements {TokenizeContext}
  */
-class Lexer {
+class Lexer extends Location implements TokenizeContext {
   /**
-   * Expected character code, used for tracking bugs.
+   * Character code chunks.
    *
    * @see {@linkcode Code}
    *
    * @protected
    * @instance
+   * @member {Code[]} chunks
+   */
+  protected chunks: Code[]
+
+  /**
+   * Expected character code, used for tracking bugs.
+   *
+   * @see {@linkcode Code}
+   *
+   * @private
+   * @instance
    * @member {Code} code
    */
-  protected code: Code
+  #code: Code
 
   /**
    * Character code consumption state, used for tracking bugs.
    *
-   * @protected
+   * @private
    * @instance
    * @member {boolean | null} consumed
    */
-  protected consumed: boolean | null
+  #consumed: boolean | null
 
   /**
    * Tokenize context.
@@ -86,13 +111,13 @@ class Lexer {
   protected debug: debug.Debugger
 
   /**
-   * Disabled construct names.
+   * List of disabled constructs.
    *
-   * @public
+   * @protected
    * @instance
    * @member {ReadonlyArray<string>} disabled
    */
-  public disabled: readonly string[]
+  protected disabled: readonly string[]
 
   /**
    * Context object to transition the state machine.
@@ -106,13 +131,15 @@ class Lexer {
   protected effects: Effects
 
   /**
-   * Boolean indicating end of file has been reached.
+   * Line ending code check.
+   *
+   * @see {@linkcode CodeCheck}
    *
    * @protected
    * @instance
-   * @member {boolean} eof
+   * @member {CodeCheck} eol
    */
-  protected eof: boolean
+  protected eol: CodeCheck
 
   /**
    * List of events.
@@ -126,18 +153,7 @@ class Lexer {
   public events: Event[]
 
   /**
-   * Head token.
-   *
-   * @see {@linkcode Token}
-   *
-   * @public
-   * @instance
-   * @member {Token} head
-   */
-  public head!: Token
-
-  /**
-   * Initialization construct.
+   * Initial construct.
    *
    * @see {@linkcode InitialConstruct}
    *
@@ -154,51 +170,62 @@ class Lexer {
    *
    * @protected
    * @instance
-   * @member {Construct | null | undefined} lastConstruct
+   * @member {Construct | undefined} lastConstruct
    */
-  protected lastConstruct: Construct | null | undefined
+  protected lastConstruct: Construct | undefined
 
   /**
    * Last {@linkcode events} length.
    *
-   * @see {@linkcode Offset}
-   *
    * @protected
    * @instance
-   * @member {Offset} lastEvent
+   * @member {number} lastEvent
    */
-  protected lastEvent: Offset
+  protected lastEvent: number
 
   /**
-   * Last reader index.
+   * Last place.
    *
-   * @see {@linkcode Offset}
+   * @see {@linkcode Place}
    *
    * @protected
    * @instance
-   * @member {Offset} lastIndex
+   * @member {Place} lastPlace
    */
-  protected lastIndex: Offset
+  protected lastPlace: Place
 
   /**
-   * Last tail token.
+   * Last token stack.
+   *
+   * @see {@linkcode Token}
    *
    * @protected
    * @instance
-   * @member {Token | null} lastToken
+   * @member {Token[]} lastStack
    */
-  protected lastToken: Token | null
+  protected lastStack: Token[]
 
   /**
-   * Source file reader.
+   * Current point in file.
    *
-   * @see {@linkcode Reader}
+   * @see {@linkcode Place}
+   *
+   * @public
+   * @instance
+   * @member {Place} place
+   */
+  declare public place: Place
+
+  /**
+   * Turn a value into character code chunks.
+   *
+   * @see {@linkcode Preprocessor}
    *
    * @protected
    * @instance
-   * @member {Reader} reader
+   * @member {Preprocessor} preprocess
    */
-  protected reader: Reader
+  protected preprocess: Preprocessor
 
   /**
    * Constructs with `resolveAll` handlers.
@@ -212,6 +239,41 @@ class Lexer {
   protected resolveAll: Construct[]
 
   /**
+   * End of stream resolvers.
+   *
+   * @see {@linkcode Resolver}
+   *
+   * @protected
+   * @instance
+   * @member {Resolver[]} resolvers
+   */
+  protected resolvers: Resolver[]
+
+  /**
+   * Map, where each key is a line number and each value a column to be skipped
+   * to when the internal reader is on that line.
+   *
+   * @see {@linkcode Column}
+   * @see {@linkcode Line}
+   *
+   * @protected
+   * @instance
+   * @member {Record<Line, Column>} skips
+   */
+  protected skips: Record<Line, Column>
+
+  /**
+   * Token stack.
+   *
+   * @see {@linkcode Token}
+   *
+   * @protected
+   * @instance
+   * @member {Token[]} stack
+   */
+  protected stack: Token[]
+
+  /**
    * Current state.
    *
    * @see {@linkcode State}
@@ -221,17 +283,6 @@ class Lexer {
    * @member {State | undefined} state
    */
   protected state: State | undefined
-
-  /**
-   * Tail token.
-   *
-   * @see {@linkcode Token}
-   *
-   * @public
-   * @instance
-   * @member {Token} tail
-   */
-  public tail!: Token
 
   /**
    * Token factory.
@@ -248,30 +299,53 @@ class Lexer {
    * Create a new file tokenizer.
    *
    * @see {@linkcode Options}
-   * @see {@linkcode VFile}
-   * @see {@linkcode Value}
    *
-   * @param {Value | VFile | null | undefined} file - File to tokenize
-   * @param {Options} options - Tokenization options
+   * @param {Options | null | undefined} [options] - Tokenize options
    */
-  constructor(file: Value | VFile | null | undefined, options: Options) {
-    assert(options.token, 'expected token factory')
+  constructor(options?: Options | null | undefined) {
+    super(null, options?.from)
+    this.place._index = 0
 
-    this.debug = debug(options.debug ?? 'vfile-lexer')
-    this.disabled = Object.freeze(options.disabled ?? [])
-    this.reader = new Reader(file, options.from)
-    this.token = options.token
+    const {
+      constructs,
+      debug: debugName,
+      disabled,
+      eol,
+      finalizeContext,
+      initialize: initializer,
+      preprocess: preprocessor,
+      resolvers,
+      token
+    } = options ?? {}
 
-    this.code = this.reader.read()
-    this.consumed = true
-    this.eof = false
+    this.debug = debug(debugName ?? 'vfile-lexer')
+    this.disabled = Object.freeze(disabled ?? [])
+    this.initialize = initializer ?? initialize(constructs ?? {})
+    this.preprocess = preprocessor ?? preprocess()
+    this.resolvers = resolvers ? [...resolvers] : []
+    this.token = token ?? function token(
+      type: TokenType,
+      info: TokenInfo
+    ): Token {
+      return Object.defineProperties(u(type, info), {
+        next: { enumerable: false, writable: true },
+        previous: { enumerable: false, writable: true }
+      })
+    }
+
+    assert(typeof this.token, 'expected token factory')
+    this.#code = codes.eof
+    this.#consumed = true
+    this.chunks = []
+    this.eol = eol ?? isLineEnding
     this.events = []
-    this.initialize = options.initialize ?? initialize(options.constructs ?? [])
-    this.lastConstruct = null
+    this.lastConstruct = undefined
     this.lastEvent = 0
-    this.lastIndex = 0
-    this.lastToken = null
+    this.lastPlace = this.now()
+    this.lastStack = []
     this.resolveAll = []
+    this.skips = {}
+    this.stack = []
 
     /**
      * Base context object.
@@ -279,32 +353,22 @@ class Lexer {
      * @const {TokenizeContext} context
      */
     const context: TokenizeContext = Object.defineProperties({
-      check: this.reader.check.bind(this.reader),
-      code: this.code,
+      code: codes.eof,
       currentConstruct: this.lastConstruct,
-      disabled: this.disabled,
+      defineSkip: this.defineSkip.bind(this),
       events: this.events,
-      includes: this.reader.includes.bind(this.reader),
-      next: this.reader.peek(),
+      next: codes.eof,
       now: this.now.bind(this),
-      peek: this.reader.peek.bind(this.reader),
-      previous: this.reader.previous,
-      serialize: this.reader.serialize.bind(this.reader),
-      slice: this.reader.slice.bind(this.reader),
-      sliceSerialize: this.reader.sliceSerialize.bind(this.reader),
-      token: this.tail
+      previous: codes.eof,
+      sliceSerialize: this.sliceSerialize.bind(this),
+      sliceStream: this.sliceStream.bind(this),
+      write: this.write.bind(this)
     }, {
       /* c8 ignore next 6 */
-      code: { configurable: false, get: (): Code => this.reader.output },
-      next: { configurable: false, get: (): Code => this.reader.peek() },
-      previous: { configurable: false, get: (): Code => this.reader.previous },
-      token: {
-        configurable: false,
-        get: (): Readonly<Token> => Object.freeze(Object.assign({}, this.tail))
-      }
+      code: { configurable: false, get: (): Code => this.code },
+      next: { configurable: false, get: (): Code => this.next },
+      previous: { configurable: false, get: (): Code => this.previous }
     })
-
-    this.context = options.context?.(context) ?? context
 
     this.effects = {
       attempt: this.constructFactory(this.resolve.bind(this)),
@@ -315,26 +379,72 @@ class Lexer {
       interrupt: this.constructFactory(this.restore.bind(this), true)
     }
 
-    if (this.initialize.resolveAll) this.resolveAll.push(this.initialize)
+    this.context = context
+    this.context = finalizeContext?.call(this, this.context) ?? this.context
+
     this.state = this.initialize.tokenize.call(this.context, this.effects)
+    this.initialize.resolveAll && this.resolveAll.push(this.initialize)
   }
 
   /**
-   * Create a new file tokenizer for `file`.
+   * Get the current character code without changing the position of the reader.
    *
-   * @see {@linkcode Options}
-   * @see {@linkcode VFile}
-   * @see {@linkcode Value}
+   * > 👉 Equivalent to `this.peek(0)`.
+   *
+   * @see {@linkcode Code}
    *
    * @public
-   * @static
+   * @instance
    *
-   * @param {Value | VFile} file - File to tokenize
-   * @param {Options} options - Tokenization options
-   * @return {Lexer} New lexer instance
+   * @return {Code} Current character code
    */
-  public static create(file: Value | VFile, options: Options): Lexer {
-    return new Lexer(file, options)
+  public get code(): Code {
+    return this.peek(0)
+  }
+
+  /**
+   * Check if end of stream has been reached.
+   *
+   * @public
+   * @instance
+   *
+   * @return {boolean} `true` if at end of stream, `false` otherwise
+   */
+  public get eos(): boolean {
+    return this.chunks[this.chunks.length - 1] === codes.eof
+  }
+
+  /**
+   * Get the next character code without changing the position of the reader.
+   *
+   * > 👉 Equivalent to `this.peek()`.
+   *
+   * @see {@linkcode Code}
+   *
+   * @public
+   * @instance
+   *
+   * @return {Code} Next character code
+   */
+  public get next(): Code {
+    return this.peek()
+  }
+
+  /**
+   * Get the previous character code without changing the position of the
+   * reader.
+   *
+   * > 👉 Equivalent to `this.peek(-1)`.
+   *
+   * @see {@linkcode Code}
+   *
+   * @public
+   * @instance
+   *
+   * @return {Code} Previous character code
+   */
+  public get previous(): Code {
+    return this.peek(-1)
   }
 
   /**
@@ -348,7 +458,7 @@ class Lexer {
    *
    * @param {ReturnHandle} onreturn - Successful construct callback
    * @param {boolean | null | undefined} [interrupt] - Interrupting?
-   * @return {Attempt} attempt/check/interrupt state
+   * @return {Attempt} attempt/check/interrupt
    */
   protected constructFactory(
     onreturn: ReturnHandle,
@@ -361,7 +471,18 @@ class Lexer {
      */
     const self: this = this
 
-    return function hook(
+    return hook
+
+    /**
+     * Handle either an object mapping codes to constructs, a list of
+     * constructs, or a single construct.
+     *
+     * @param {Constructs} construct - Constructs to try
+     * @param {State | undefined} [succ] - Successful tokenization state
+     * @param {State | undefined} [fail] - Failed tokenization state
+     * @return {State} Next state
+     */
+    function hook(
       construct: Constructs,
       succ: State = /* c8 ignore next */ () => undefined,
       fail?: State
@@ -383,22 +504,24 @@ class Lexer {
       /**
        * Construct list.
        *
-       * @var {ReadonlyArray<Construct>} list
+       * @var {Construct[]} list
        */
-      let list: readonly Construct[]
+      let list: Construct[]
 
-      // handle a single construct, list of constructs, or map of constructs
-      return 'tokenize' in construct || Array.isArray(construct)
-        ? handleConstructList([construct].flat())
-        : handleConstructMap(construct)
+      // handle list of constructs, single construct, or map of constructs
+      return Array.isArray(construct)
+        ? handleConstructList(construct)
+        : 'tokenize' in construct
+        ? handleConstructList([construct])
+        : handleConstructRecord(construct)
 
       /**
        * Handle a list of constructs.
        *
-       * @param {ReadonlyArray<Construct>} constructs - Constructs to try
+       * @param {Construct[]} constructs - Constructs to try
        * @return {State} Next state
        */
-      function handleConstructList(constructs: readonly Construct[]): State {
+      function handleConstructList(constructs: Construct[]): State {
         list = constructs
         j = 0
 
@@ -416,30 +539,27 @@ class Lexer {
        * @param {ConstructRecord} map - Constructs to try
        * @return {State} Next state
        */
-      function handleConstructMap(map: ConstructRecord): State {
-        return start
+      function handleConstructRecord(map: ConstructRecord): State {
+        return run
 
         /**
          * Check if `value` looks like a construct, or list of constructs.
          *
          * @param {unknown} value - Value to check
-         * @return {value is Construct | ReadonlyArray<Construct>} `true` if
-         * value is an object
+         * @return {value is ConstructPack} `true` if value is an object
          */
-        function is(value: unknown): value is Construct | readonly Construct[] {
+        function is(value: unknown): value is ConstructPack {
           return typeof value === 'object'
         }
 
         /**
-         * Start construct tokenization.
-         *
          * @param {Code} code - Current character code
          * @return {State | undefined} Next state
          */
-        function start(code: Code): State | undefined {
+        function run(code: Code): State | undefined {
           return handleConstructList([
             ...[code !== null && map[code]].flat().filter(value => is(value)),
-            ...[code !== null && map.null].flat().filter(value => is(value))
+            ...[map.null].flat().filter(value => is(value))
           ])(code)
         }
       }
@@ -454,8 +574,6 @@ class Lexer {
         return start
 
         /**
-         * Start construct tokenization.
-         *
          * @param {Code} code - Current character code
          * @return {State | undefined} Next state
          */
@@ -463,12 +581,10 @@ class Lexer {
           const { context, disabled, effects } = self
           const { name, partial, previous, test, tokenize } = construct
 
+          self.store()
           currentConstruct = construct
-
           if (!partial) context.currentConstruct = construct
-          if (fail) self.store()
-
-          context.interrupt = interrupt
+          context.interrupt = <boolean | undefined>interrupt
 
           switch (true) {
             case !!name && disabled.includes(name):
@@ -488,10 +604,10 @@ class Lexer {
        * @return {State} Next state
        */
       function ok(code: Code): State {
-        assert(code === self.code, 'expected `code` to equal expected code')
+        assert(code === self.#code, 'expected `code` to equal expected code')
         self.debug('ok: `%o`', code)
 
-        self.consumed = true
+        self.#consumed = true
         onreturn(currentConstruct)
 
         return succ
@@ -505,10 +621,10 @@ class Lexer {
        */
       function nok(code: Code): State | undefined {
         assert(list, 'expected construct list')
-        assert(code === self.code, 'expected `code` to equal expected code')
+        assert(code === self.#code, 'expected `code` to equal expected code')
         self.debug('nok: `%o`', code)
 
-        self.consumed = true
+        self.#consumed = true
         self.restore()
 
         return ++j < list.length ? handleConstruct(list[j]!) : fail
@@ -528,12 +644,36 @@ class Lexer {
    * @return {undefined} Nothing
    */
   protected consume(code: Code): undefined {
-    assert(code === this.code, 'expected `code` to equal expected code')
+    assert(code === this.#code, 'expected `code` to equal expected code')
     this.debug('consume: `%o`', code)
-    assert(this.consumed === null, 'expected unconsumed code')
-    code !== codes.eof ? this.reader.read() : (this.eof = true)
-    return void (this.consumed = true)
+    assert(this.#consumed === null, 'expected unconsumed code')
+    this.read()
+    this.#consumed = true
+    return void code
   }
+
+  /* c8 ignore start */
+
+  /**
+   * Define a skip.
+   *
+   * @see {@linkcode DefineSkip}
+   * @see {@linkcode Point}
+   *
+   * @todo test
+   *
+   * @public
+   * @instance
+   *
+   * @param {Pick<Point, 'column' | 'line'>} point - Skip point
+   * @return {undefined} Nothing
+   */
+  public defineSkip(point: Pick<Point, 'column' | 'line'>): undefined {
+    this.skips[point.line] = point.column
+    return this.skip(), void this.debug('position: define skip: `%j`', point)
+  }
+
+  /* c8 ignore stop */
 
   /**
    * Start a new token.
@@ -546,12 +686,12 @@ class Lexer {
    * @instance
    *
    * @param {TokenType} type - Token type
-   * @param {(Partial<TokenFields> | null)?} fields - Token fields
+   * @param {TokenFields | null | undefined} [fields] - Token fields
    * @return {Token} Open token
    */
   protected enter(
     type: TokenType,
-    fields?: Partial<TokenFields> | null
+    fields?: TokenFields | null | undefined
   ): Token {
     /**
      * New token.
@@ -560,21 +700,16 @@ class Lexer {
      */
     const token: Token = this.token(type, {
       ...fields,
-      end: this.reader.point(-1),
-      start: this.now()
+      start: this.now(), // eslint-disable-next-line sort-keys
+      end: this.now()
     })
 
-    // shift/replace/init tail
-    if ((<Token | undefined>this.head)) {
-      token.previous = this.tail
-      this.tail.next = token
-      this.tail = this.tail.next
-    } else {
-      this.head = this.tail = token
-    }
-
+    assert(typeof type === 'string', 'expected `type` to be a string')
+    assert(type.length > 0, 'expected `type` to be a non-empty string')
     this.debug('enter: `%s`; %o', type, token.start)
+
     this.events.push([ev.enter, token, this.context])
+    this.stack.push(token)
 
     return token
   }
@@ -594,28 +729,13 @@ class Lexer {
   protected exit(type: TokenType): Token {
     assert(typeof type === 'string', 'expected `type` to be a string')
     assert(type.length > 0, 'expected `type` to be a non-empty string')
-    assert(this.events.length, 'expected events')
 
     /**
      * Token to close.
      *
-     * @var {Token | undefined} token
+     * @const {Token | undefined} token
      */
-    let token: Token | undefined = this.tail
-
-    // find open token
-    while (token) {
-      if (
-        !!token.start.column &&
-        !!token.start.line &&
-        token.start.offset >= 0 &&
-        token.end.column + token.end.line + token.end.offset === -3
-      ) {
-        break
-      }
-
-      token = token.previous
-    }
+    const token: Token | undefined = this.stack.pop()
 
     assert(token, 'cannot exit without open token')
     assert(type === token.type, 'expected exit token to match current token')
@@ -641,10 +761,10 @@ class Lexer {
    * @return {undefined} Nothing
    */
   protected go(code: Code): undefined {
-    assert(this.consumed, `expected code \`${code}\` to be consumed`)
-    this.consumed = null
+    assert(this.#consumed, `expected code \`${code}\` to be consumed`)
+    this.#consumed = null
     this.debug('go: `%o`, %j', code, /* c8 ignore next */ this.state?.name)
-    this.code = code
+    this.#code = code
     assert(typeof this.state === 'function', 'expected state function')
     this.state = this.state(code)
     return void code
@@ -653,15 +773,70 @@ class Lexer {
   /**
    * Get the current point in the file.
    *
-   * @see {@linkcode Point}
+   * @see {@linkcode Place}
+   *
+   * @public
+   * @instance
+   *
+   * @return {Place} Current point in file, relative to {@linkcode start}
+   */
+  public now(): Place {
+    const { _index, column, line, offset } = this.place
+    // eslint-disable-next-line sort-keys
+    return { line, column, offset, _index }
+  }
+
+  /**
+   * Get the next `k`-th character code from the file without changing the
+   * position of the reader.
+   *
+   * @see {@linkcode Code}
+   *
+   * @public
+   * @instance
+   *
+   * @param {number?} [k=1] - Difference between index of next `k`-th character
+   * code and index of current character code
+   * @return {Code} Peeked character code
+   */
+  public peek(k: number = 1): Code {
+    return this.chunks[this.place._index + k] ?? codes.eof
+  }
+
+  /**
+   * Get the next character code.
+   *
+   * Unlike {@linkcode peek}, this method changes the position of the reader.
+   *
+   * @see {@linkcode Code}
    *
    * @protected
    * @instance
    *
-   * @return {Point} Current point in file
+   * @return {Code} Next character code
    */
-  protected now(): Point {
-    return this.reader.now()
+  protected read(): Code {
+    /**
+     * Current character code.
+     *
+     * @const {Code} code
+     */
+    const code: Code = this.code
+
+    if (this.eol(code)) {
+      this.place.column = 1
+      this.place.line++
+      this.place.offset += code === codes.crlf ? 2 : 1
+      this.skip()
+      this.debug('position after eol: %o', this.place)
+    } else if (code !== codes.vs && code !== codes.eof) {
+      this.place.column++
+      this.place.offset++
+    } else if (code === codes.vs && this.previous === codes.vht) {
+      this.place.column++
+    }
+
+    return this.chunks[++this.place._index] ?? codes.eof
   }
 
   /**
@@ -686,8 +861,6 @@ class Lexer {
     }
 
     if (construct.resolve) {
-      assert(lastEvent >= 0, 'expected last event index')
-
       splice(
         this.events,
         lastEvent,
@@ -702,8 +875,8 @@ class Lexer {
 
     assert(
       /* c8 ignore next 3 */ !!construct.partial ||
-        !this.context.events.length ||
-        this.context.events[this.context.events.length - 1]![0] === ev.exit,
+        !this.events.length ||
+        this.events[this.events.length - 1]![0] === ev.exit,
       'expected last token to end'
     )
 
@@ -711,7 +884,8 @@ class Lexer {
   }
 
   /**
-   * Restore the last construct, event index, reader position, and tail token.
+   * Restore the last construct, event index, location, tail token, and token
+   * stack.
    *
    * @protected
    * @instance
@@ -719,22 +893,117 @@ class Lexer {
    * @return {undefined} Nothing
    */
   protected restore(): undefined {
-    assert(this.lastEvent >= 0, 'expected last event index')
-    assert(this.lastIndex >= 0, 'expected last reader position')
-    assert(this.lastToken, 'expected last token')
-
-    this.reader.read(this.lastIndex - this.reader.index)
     this.context.currentConstruct = this.lastConstruct
     this.events.length = this.lastEvent
-    this.tail = this.lastToken
-    this.tail.next = undefined
-
-    this.debug('restore: %o', this.now())
-    return void this
+    this.place = { ...this.lastPlace }
+    this.stack = [...this.lastStack]
+    return void this.debug('restore: %o', this.now())
   }
 
   /**
-   * Store the current construct, event index reader position, and tail token.
+   * Move the current point a bit forward in the line when on a column skip.
+   *
+   * @todo test
+   *
+   * @protected
+   * @instance
+   *
+   * @return {undefined} Nothing
+   */
+  protected skip(): undefined {
+    /* c8 ignore next 4 */
+    if (this.place.line in this.skips && this.place.column < 2) {
+      this.place.column = this.skips[this.place.line]!
+      this.place.offset += this.place.column - 1
+    }
+
+    return void this.place
+  }
+
+  /**
+   * Get the text spanning `range` without changing the position of the reader.
+   *
+   * @see {@linkcode Position}
+   *
+   * @public
+   * @instance
+   *
+   * @param {Position} range - Position in stream
+   * @param {boolean | null | undefined} [expandTabs] - Expand tabs?
+   * @return {string} Serialized slice
+   */
+  public sliceSerialize(
+    range: Position,
+    expandTabs?: boolean | null | undefined
+  ): string {
+    /**
+     * Character code slice.
+     *
+     * @const {Code[]} slice
+     */
+    const slice: Code[] = this.sliceStream(range)
+
+    /**
+     * Serialized character code array.
+     *
+     * @const {string[]} result
+     */
+    const result: string[] = []
+
+    /**
+     * Current code represents horizontal tab?
+     *
+     * @var {boolean} tab
+     */
+    let tab: boolean = false
+
+    for (const code of slice) {
+      switch (code) {
+        case codes.crlf:
+          result.push(chars.crlf)
+          break
+        case codes.vcr:
+          result.push(chars.cr)
+          break
+        case codes.vht:
+          result.push(expandTabs ? chars.space : chars.ht)
+          break
+        case codes.vlf:
+          result.push(chars.lf)
+          break
+        case codes.vs:
+          if (!expandTabs && tab) continue
+          result.push(chars.space)
+          break
+        default:
+          result.push(String.fromCodePoint(code!))
+      }
+
+      tab = code === codes.vht
+    }
+
+    return result.join(chars.empty)
+  }
+
+  /**
+   * Get the chunks spanning `range`.
+   *
+   * @see {@linkcode Code}
+   * @see {@linkcode Position}
+   *
+   * @public
+   * @instance
+   *
+   * @param {Position} range - Position in stream
+   * @return {Code[]} List of chunks
+   */
+  public sliceStream(range: Position): Code[] {
+    return this.chunks.slice(range.start._index, range.end._index)
+  }
+
+  /**
+   * Store the current construct, event index, location, tail token, and token
+   * stack.
    *
    * @protected
    * @instance
@@ -744,27 +1013,74 @@ class Lexer {
   protected store(): undefined {
     this.lastConstruct = this.context.currentConstruct
     this.lastEvent = this.events.length
-    this.lastIndex = this.reader.index
-    this.lastToken = this.tail
-
+    this.lastPlace = this.now()
+    this.lastStack = [...this.stack]
     return void this
   }
 
   /**
-   * Tokenize the file.
+   * Main loop to walk through {@linkcode chunks}.
    *
-   * @public
+   * > 👉 The {@linkcode read} method modifies `_index` in {@linkcode place} to
+   * > advance the loop until end of stream.
+   *
+   * @protected
    * @instance
    *
    * @return {this} `this` lexer
    */
-  public tokenize(): this {
-    while (!this.eof) this.go(this.reader.output)
+  protected tokenize(): this {
+    while (this.place._index < this.chunks.length) this.go(this.code)
+    this.eos && this.state && this.go(this.code)
+    return this
+  }
+
+  /**
+   * Write a slice of chunks.
+   *
+   * The eof code (`null`) can be used to signal end of stream.
+   *
+   * @see {@linkcode Chunk}
+   * @see {@linkcode Event}
+   *
+   * @public
+   * @instance
+   *
+   * @param {Chunk[]} slice - Chunks
+   * @return {Event[]} List of events
+   */
+  public write(slice: Chunk[]): Event[] {
+    /**
+     * New chunks.
+     *
+     * @const {Code[]} chunks
+     */
+    const chunks: Code[] = slice.flatMap(chunk => {
+      /* c8 ignore next 2 */ return typeof chunk === 'string'
+        ? this.preprocess(chunk)
+        : chunk
+    })
+
+    this.chunks = push(this.chunks, chunks)
+    this.tokenize()
+
+    // exit if not done, resolvers might change stuff
+    /* c8 ignore next */ if (!this.eos) return []
+
+    /**
+     * Constructs with `resolveAll` handlers.
+     *
+     * > 👉 Includes partial constructs.
+     *
+     * @const {Partial<Construct>[]} constructs
+     */
+    const constructs: Partial<Construct>[] = [
+      ...this.resolveAll,
+      ...this.resolvers.map(resolveAll => ({ resolveAll }))
+    ]
 
     this.resolve(this.initialize, 0)
-    this.events = resolveAll(this.resolveAll, this.events, this.context)
-
-    return this
+    return this.events = resolveAll(constructs, this.events, this.context)
   }
 }
 

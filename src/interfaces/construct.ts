@@ -12,26 +12,26 @@ interface Construct {
   /**
    * Name of the construct, used to toggle constructs off.
    */
-  name?: string | null | undefined
+  name?: string | undefined
 
   /**
    * Whether this construct represents a partial construct.
    */
-  partial?: boolean | null | undefined
+  partial?: boolean | undefined
 
   /**
    * Check if the previous character code can come before this construct.
    *
    * @see {@linkcode Guard}
    */
-  previous?: Guard | null | undefined
+  previous?: Guard | undefined
 
   /**
    * Resolve the events parsed by {@linkcode tokenize}.
    *
    * @see {@linkcode Resolver}
    */
-  resolve?: Resolver | null | undefined
+  resolve?: Resolver | undefined
 
   /**
    * Resolve all events when the content is complete, from the start to the end.
@@ -39,7 +39,7 @@ interface Construct {
    *
    * @see {@linkcode Resolver}
    */
-  resolveAll?: Resolver | null | undefined
+  resolveAll?: Resolver | undefined
 
   /**
    * Resolve the events from the start of the content (which may include other
@@ -47,14 +47,14 @@ interface Construct {
    *
    * @see {@linkcode Resolver}
    */
-  resolveTo?: Resolver | null | undefined
+  resolveTo?: Resolver | undefined
 
   /**
    * Check if the current character code can start this construct.
    *
    * @see {@linkcode Guard}
    */
-  test?: Guard | null | undefined
+  test?: Guard | undefined
 
   /**
    * Set up a state machine to handle character codes streaming in.

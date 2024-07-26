@@ -3,8 +3,7 @@
  * @module vfile-lexer/types/Enter
  */
 
-import type { Token } from '#src/interfaces'
-import type TokenFields from './token-fields'
+import type { Token, TokenFields } from '#src/interfaces'
 import type TokenType from './token-type'
 
 /**
@@ -15,9 +14,9 @@ import type TokenType from './token-type'
  * @see {@linkcode Token}
  *
  * @param {TokenType} type - Token type
- * @param {(Partial<TokenFields> | null)?} fields - Token fields
+ * @param {TokenFields | null | undefined} [fields] - Token fields
  * @return {Token} Open token
  */
-type Enter = (type: TokenType, fields?: Partial<TokenFields> | null) => Token
+type Enter = (type: TokenType, fields?: TokenFields | null | undefined) => Token
 
 export type { Enter as default }

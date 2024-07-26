@@ -24,7 +24,8 @@
     "CHANGELOG.md",
     "LICENSE.md",
     "RELEASE_NOTES.md",
-    "yarn.lock"
+    "yarn.lock",
+    "__fixtures__/markdown/*.md"
   ],
   "exec": {
     "commands": [
