@@ -306,13 +306,7 @@ export default [
       '@typescript-eslint/no-non-null-asserted-nullish-coalescing': 2,
       '@typescript-eslint/no-non-null-asserted-optional-chain': 0,
       '@typescript-eslint/no-non-null-assertion': 0,
-      '@typescript-eslint/no-redeclare': [
-        2,
-        {
-          builtinGlobals: true,
-          ignoreDeclarationMerge: true
-        }
-      ],
+      '@typescript-eslint/no-redeclare': 0,
       '@typescript-eslint/no-require-imports': 2,
       '@typescript-eslint/no-restricted-imports': 0,
       '@typescript-eslint/no-shadow': 0,
@@ -461,6 +455,14 @@ export default [
           checkConstructors: true,
           checkGetters: true,
           checkSetters: true,
+          contexts: [
+            'ClassDeclaration',
+            'MethodDefinition',
+            'PropertyDefinition',
+            'TSInterfaceDeclaration',
+            'TSMethodSignature',
+            'VariableDeclaration'
+          ],
           descriptionStyle: 'body'
         }
       ],
@@ -491,14 +493,21 @@ export default [
           checkGetters: true,
           checkSetters: true,
           contexts: [
+            'PropertyDefinition',
             'TSDeclareFunction:not(TSDeclareFunction + TSDeclareFunction)',
+            'TSMethodSignature',
             'FunctionDeclaration:not(TSDeclareFunction + FunctionDeclaration)'
           ],
           enableFixer: true,
-          exemptEmptyConstructors: true,
+          exemptEmptyConstructors: false,
           exemptEmptyFunctions: false,
           require: {
-            FunctionDeclaration: false
+            ArrowFunctionExpression: false,
+            ClassDeclaration: true,
+            ClassExpression: true,
+            FunctionDeclaration: true,
+            FunctionExpression: true,
+            MethodDefinition: true
           }
         }
       ],
@@ -960,6 +969,7 @@ export default [
       '@typescript-eslint/triple-slash-reference': 0,
       'jsdoc/no-undefined-types': 0,
       'jsdoc/require-file-overview': 0,
+      'no-undef': 0,
       'no-var': 0,
       'unicorn/filename-case': 0,
       'unicorn/no-keyword-prefix': 0
@@ -1043,7 +1053,8 @@ export default [
       'unicorn/no-useless-undefined': 0,
       'unicorn/prefer-at': 0,
       'unicorn/prefer-dom-node-append': 0,
-      'unicorn/string-content': 0
+      'unicorn/string-content': 0,
+      'unicorn/text-encoding-identifier-case': 0
     }
   },
   {

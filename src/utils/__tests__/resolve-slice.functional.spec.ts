@@ -3,30 +3,29 @@
  * @module vfile-lexer/utils/tests/functional/resolveSlice
  */
 
-import tk from '#fixtures/tk'
+import tt from '#fixtures/tt'
 import { ev } from '#src/enums'
 import type { Token, TokenizeContext } from '#src/interfaces'
-import type { Event } from '#src/types'
-import type { MockInstance } from '#tests/interfaces'
-import type { Range } from '@flex-development/vfile-reader'
+import type { Event, SliceSerialize } from '#src/types'
+import type { MockInstance } from 'vitest'
 import testSubject from '../resolve-slice'
 
 describe('functional:utils/resolveSlice', () => {
   let context: TokenizeContext
   let events: Event[]
-  let sliceSerialize: MockInstance<TokenizeContext['sliceSerialize']>
+  let sliceSerialize: MockInstance<SliceSerialize>
   let token: Token
   let value: string
 
   beforeEach(() => {
     token = {
-      end: { column: 1, line: 2, offset: 17 },
-      start: { column: 17, line: 1, offset: 16 },
-      type: tk.whitespace
+      end: { _index: 16, column: 17, line: 1, offset: 16 },
+      start: { _index: 0, column: 1, line: 1, offset: 0 },
+      type: tt.typeMetadata
     }
 
-    value = '\n'
-    sliceSerialize = vi.fn<[range: Range], string>(() => value)
+    value = '{{ id: string }}'
+    sliceSerialize = vi.fn<SliceSerialize>(() => value)
     context = { sliceSerialize } as unknown as TokenizeContext
 
     events = [[ev.enter, token, context], [ev.exit, token, context]]

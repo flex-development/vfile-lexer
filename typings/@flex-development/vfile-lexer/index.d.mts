@@ -1,14 +1,13 @@
-import type tk from '#fixtures/tk'
+import type tt from '#fixtures/tt'
 import type {} from '#src/interfaces'
 
 declare module '#src/interfaces' {
+  interface TokenFields {
+    value?: string | null | undefined
+  }
+
   interface TokenTypeMap {
-    bigint: tk.bigint
-    inlineTag: tk.inlineTag
-    number: tk.number
-    punctuator: tk.punctuator
-    string: tk.string
-    tag: tk.tag
-    whitespace: tk.whitespace
+    eof: tt.eof
+    typeMetadata: tt.typeMetadata
   }
 }

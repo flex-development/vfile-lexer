@@ -3,7 +3,7 @@
  * @module vfile-lexer/types/Consume
  */
 
-import type { Code } from '@flex-development/vfile-reader'
+import type Code from './code'
 
 /**
  * Deal with a character `code` and move onto the next.

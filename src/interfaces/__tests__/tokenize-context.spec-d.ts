@@ -3,38 +3,35 @@
  * @module vfile-lexer/interfaces/tests/unit-d/TokenizeContext
  */
 
-import type { Event } from '#src/types'
-import type { Nilable } from '@flex-development/tutils'
 import type {
   Code,
-  CodeCheckFactory,
-  CodeReader
-} from '@flex-development/vfile-reader'
+  DefineSkip,
+  Event,
+  Now,
+  SliceSerialize,
+  SliceStream,
+  TokenFactory,
+  Write
+} from '#src/types'
+import type { Optional } from '@flex-development/tutils'
 import type Construct from '../construct'
-import type Token from '../token'
 import type TestSubject from '../tokenize-context'
 
 describe('unit-d:interfaces/TokenizeContext', () => {
-  it('should match [check: CodeCheckFactory]', () => {
-    expectTypeOf<TestSubject>()
-      .toHaveProperty('check')
-      .toEqualTypeOf<CodeCheckFactory>()
-  })
-
   it('should match [code: Code]', () => {
     expectTypeOf<TestSubject>().toHaveProperty('code').toEqualTypeOf<Code>()
   })
 
-  it('should match [currentConstruct?: Construct | null | undefined]', () => {
+  it('should match [currentConstruct?: Construct | undefined]', () => {
     expectTypeOf<TestSubject>()
       .toHaveProperty('currentConstruct')
-      .toEqualTypeOf<Nilable<Construct>>()
+      .toEqualTypeOf<Optional<Construct>>()
   })
 
-  it('should match [disabled: readonly string[]]', () => {
+  it('should match [defineSkip: DefineSkip]', () => {
     expectTypeOf<TestSubject>()
-      .toHaveProperty('disabled')
-      .toEqualTypeOf<readonly string[]>()
+      .toHaveProperty('defineSkip')
+      .toEqualTypeOf<DefineSkip>()
   })
 
   it('should match [events: Event[]]', () => {
@@ -43,59 +40,43 @@ describe('unit-d:interfaces/TokenizeContext', () => {
       .toEqualTypeOf<Event[]>()
   })
 
-  it('should match [includes: CodeReader["includes"]]', () => {
-    expectTypeOf<TestSubject>()
-      .toHaveProperty('includes')
-      .toEqualTypeOf<CodeReader['includes']>()
-  })
-
-  it('should match [interrupt?: boolean | null | undefined]', () => {
+  it('should match [interrupt?: boolean | undefined]', () => {
     expectTypeOf<TestSubject>()
       .toHaveProperty('interrupt')
-      .toEqualTypeOf<Nilable<boolean>>()
+      .toEqualTypeOf<Optional<boolean>>()
   })
 
   it('should match [next: Code]', () => {
     expectTypeOf<TestSubject>().toHaveProperty('next').toEqualTypeOf<Code>()
   })
 
-  it('should match [now: CodeReader["now"]]', () => {
-    expectTypeOf<TestSubject>()
-      .toHaveProperty('now')
-      .toEqualTypeOf<CodeReader['now']>()
-  })
-
-  it('should match [peek: CodeReader["peek"]]', () => {
-    expectTypeOf<TestSubject>()
-      .toHaveProperty('peek')
-      .toEqualTypeOf<CodeReader['peek']>()
+  it('should match [now: Now]', () => {
+    expectTypeOf<TestSubject>().toHaveProperty('now').toEqualTypeOf<Now>()
   })
 
   it('should match [previous: Code]', () => {
     expectTypeOf<TestSubject>().toHaveProperty('previous').toEqualTypeOf<Code>()
   })
 
-  it('should match [serialize: CodeReader["serialize"]]', () => {
-    expectTypeOf<TestSubject>()
-      .toHaveProperty('serialize')
-      .toEqualTypeOf<CodeReader['serialize']>()
-  })
-
-  it('should match [slice: CodeReader["slice"]]', () => {
-    expectTypeOf<TestSubject>()
-      .toHaveProperty('slice')
-      .toEqualTypeOf<CodeReader['slice']>()
-  })
-
-  it('should match [sliceSerialize: CodeReader["sliceSerialize"]]', () => {
+  it('should match [sliceSerialize: SliceSerialize]', () => {
     expectTypeOf<TestSubject>()
       .toHaveProperty('sliceSerialize')
-      .toEqualTypeOf<CodeReader['sliceSerialize']>()
+      .toEqualTypeOf<SliceSerialize>()
   })
 
-  it('should match [token: Readonly<Token>]', () => {
+  it('should match [sliceStream: SliceStream]', () => {
+    expectTypeOf<TestSubject>()
+      .toHaveProperty('sliceStream')
+      .toEqualTypeOf<SliceStream>()
+  })
+
+  it('should match [token: TokenFactory]', () => {
     expectTypeOf<TestSubject>()
       .toHaveProperty('token')
-      .toEqualTypeOf<Readonly<Token>>()
+      .toEqualTypeOf<TokenFactory>()
+  })
+
+  it('should match [write: Write]', () => {
+    expectTypeOf<TestSubject>().toHaveProperty('write').toEqualTypeOf<Write>()
   })
 })

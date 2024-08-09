@@ -4,12 +4,17 @@
  */
 
 import type { Construct } from '#src/interfaces'
+import type Info from '../info'
 import type TestSubject from '../return-handle'
 
 describe('unit-d:types/ReturnHandle', () => {
   describe('parameters', () => {
-    it('should be callable with [Construct]', () => {
-      expectTypeOf<TestSubject>().parameters.toEqualTypeOf<[Construct]>()
+    it('should be callable with [Construct, Info]', () => {
+      // Arrange
+      type P = [Construct, Info]
+
+      // Expect
+      expectTypeOf<TestSubject>().parameters.toEqualTypeOf<P>()
     })
   })
 
