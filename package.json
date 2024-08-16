@@ -114,7 +114,7 @@
     "dprint": "0.46.3",
     "editorconfig": "2.0.0",
     "esbuild": "0.21.5",
-    "eslint": "9.5.0",
+    "eslint": "9.9.0",
     "eslint-import-resolver-typescript": "3.6.1",
     "eslint-mdx": "3.1.5",
     "eslint-plugin-chai-expect": "3.1.0",
