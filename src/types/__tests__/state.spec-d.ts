@@ -4,7 +4,7 @@
  */
 
 import type { Optional } from '@flex-development/tutils'
-import type { Code } from '@flex-development/vfile-reader'
+import type Code from '../code'
 import type TestSubject from '../state'
 
 describe('unit-d:types/State', () => {

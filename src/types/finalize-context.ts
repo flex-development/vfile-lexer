@@ -6,15 +6,15 @@
 import type { TokenizeContext } from '#src/interfaces'
 
 /**
- * Finalize the tokenization context.
+ * Finalize the tokenize context.
  *
  * @see {@linkcode TokenizeContext}
  *
- * @param {TokenizeContext} context - Base context
- * @return {TokenizeContext | null | undefined | void} Final context
+ * @param {TokenizeContext} base - Base tokenize context
+ * @return {TokenizeContext | null | undefined} Final context
  */
 type FinalizeContext = (
   base: TokenizeContext
-) => TokenizeContext | null | undefined | void
+) => TokenizeContext | null | undefined
 
 export type { FinalizeContext as default }

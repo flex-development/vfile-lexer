@@ -4,7 +4,7 @@
  */
 
 import type { TokenizeContext } from '#src/interfaces'
-import type { Code } from '@flex-development/vfile-reader'
+import type Code from './code'
 
 /**
  * Check the given character `code`.

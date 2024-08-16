@@ -13,6 +13,7 @@ fbca
 ggshield
 gpgsign
 hmarr
+iife
 jchen
 kaisugi
 lcov
@@ -22,6 +23,8 @@ mlly
 nocheck
 nvmrc
 onreturn
+onsuccessfulcheck
+onsuccessfulconstruct
 pathe
 pkgs
 preid
@@ -33,3 +36,4 @@ vates
 vfile
 vitest
 yarnrc
+zwnj

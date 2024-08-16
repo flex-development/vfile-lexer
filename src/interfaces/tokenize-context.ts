@@ -3,34 +3,29 @@
  * @module vfile-lexer/interfaces/TokenizeContext
  */
 
-import type { Event } from '#src/types'
 import type {
   Code,
-  CodeCheckFactory,
-  CodeReader
-} from '@flex-development/vfile-reader'
+  DefineSkip,
+  Event,
+  Now,
+  SerializeChunks,
+  SliceSerialize,
+  SliceStream,
+  TokenFactory,
+  Write
+} from '#src/types'
 import type Construct from './construct'
-import type Token from './token'
 
 /**
  * Context object to assist with tokenization.
  */
 interface TokenizeContext {
   /**
-   * Create a code check from a regular expression.
-   *
-   * @see {@linkcode CodeCheckFactory}
-   */
-  check: CodeCheckFactory
-
-  /**
-   * Get the current character code.
+   * Current character code.
    *
    * @see {@linkcode Code}
-   *
-   * @return {Code} Current character code
    */
-  get code(): Code
+  code: Code
 
   /**
    * The current construct.
@@ -39,95 +34,84 @@ interface TokenizeContext {
    *
    * @see {@linkcode Construct}
    */
-  currentConstruct?: Construct | null | undefined
+  currentConstruct?: Construct | undefined
 
   /**
-   * Disabled construct names.
+   * Define a skip.
+   *
+   * @see {@linkcode DefineSkip}
    */
-  disabled: readonly string[]
+  defineSkip: DefineSkip
 
   /**
-   * Current list of events.
+   * List of events.
    *
    * @see {@linkcode Event}
    */
   events: Event[]
 
   /**
-   * Check if the file contains the given search value, relative to the current
-   * reader position.
-   *
-   * @see {@linkcode CodeReader.includes}
+   * Boolean indicating a construct is interrupting another construct.
    */
-  includes: CodeReader['includes']
+  interrupt?: boolean | undefined
 
   /**
-   * Boolean indicating the a construct is interrupting another construct.
-   */
-  interrupt?: boolean | null | undefined
-
-  /**
-   * Get the next character code.
+   * Next character code.
    *
    * @see {@linkcode Code}
-   *
-   * @return {Code} Next character code
    */
-  get next(): Code
+  next: Code
 
   /**
    * Get the current point in the file.
    *
-   * @see {@linkcode CodeReader.now}
+   * @see {@linkcode Now}
    */
-  now: CodeReader['now']
+  now: Now
 
   /**
-   * Get the next `k`-th code point from the file without changing the position
-   * of the reader, with `null` denoting end of file.
-   *
-   * @see {@linkcode CodeReader.peek}
-   */
-  peek: CodeReader['peek']
-
-  /**
-   * Get the previous character code.
+   * Previous character code.
    *
    * @see {@linkcode Code}
-   *
-   * @return {Code} Previous character code
    */
-  get previous(): Code
+  previous: Code
 
   /**
-   * Convert the specified sequence of character codes to a string.
+   * Get the string value of a slice of chunks.
    *
-   * @see {@linkcode CodeReader.serialize}
+   * @see {@linkcode SerializeChunks}
    */
-  serialize: CodeReader['serialize']
+  serializeChunks: SerializeChunks
 
   /**
-   * Get the character codes spanning the specified range without changing the
-   * position of the reader.
+   * Get the text spanning the specified range.
    *
-   * @see {@linkcode CodeReader.slice}
+   * @see {@linkcode SliceSerialize}
    */
-  slice: CodeReader['slice']
+  sliceSerialize: SliceSerialize
 
   /**
-   * Get the text spanning the specified range without changing the position of
-   * the reader.
+   * Get the chunks spanning the specified range.
    *
-   * @see {@linkcode CodeReader.sliceSerialize}
+   * @see {@linkcode SliceStream}
    */
-  sliceSerialize: CodeReader['sliceSerialize']
+  sliceStream: SliceStream
 
   /**
-   * Current tail token.
+   * Token factory.
    *
-   * @see {@linkcode Token}
+   * @see {@linkcode TokenFactory}
    */
-  get token(): Readonly<Token>
+  token: TokenFactory
+
+  /**
+   * Write a slice of chunks.
+   *
+   * The eof code (`null`) can be used to signal the end of the stream.
+   *
+   * @see {@linkcode Write}
+   */
+  write: Write
 }
 
 export type { TokenizeContext as default }

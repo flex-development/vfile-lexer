@@ -3,8 +3,15 @@
  * @module vfile-lexer/interfaces/Options
  */
 
-import type { Constructs, FinalizeContext, TokenFactory } from '#src/types'
-import type { Point } from '@flex-development/vfile-reader'
+import type {
+  CodeCheck,
+  CreateInitialConstruct,
+  FinalizeContext,
+  Preprocessor,
+  TokenFactory
+} from '#src/types'
+import type { u } from '@flex-development/unist-util-builder'
+import type { Point } from '@flex-development/vfile-location'
 import type InitialConstruct from './construct-initial'
 
 /**
@@ -12,23 +19,9 @@ import type InitialConstruct from './construct-initial'
  */
 interface Options {
   /**
-   * Constructs.
-   *
-   * @see {@linkcode Constructs}
-   */
-  constructs?: Constructs | null | undefined
-
-  /**
-   * Finalize the tokenization context.
-   *
-   * @see {@linkcode FinalizeContext}
-   */
-  context?: FinalizeContext | null | undefined
-
-  /**
    * Debug logger name.
    *
-   * @default 'vfile-lexer'
+   * @default 'unist-util-tokenize'
    */
   debug?: string | null | undefined
 
@@ -38,7 +31,21 @@ interface Options {
   disabled?: readonly string[] | null | undefined
 
   /**
-   * Point before first character in file.
+   * Line ending code check.
+   *
+   * @see {@linkcode CodeCheck}
+   */
+  eol?: CodeCheck | null | undefined
+
+  /**
+   * Finalize the tokenization context.
+   *
+   * @see {@linkcode FinalizeContext}
+   */
+  finalizeContext?: FinalizeContext | null | undefined
+
+  /**
+   * Point before first character.
    *
    * @see {@linkcode Point}
    *
@@ -47,18 +54,29 @@ interface Options {
   from?: Point | null | undefined
 
   /**
-   * Initialization construct.
+   * Initial construct.
    *
+   * @see {@linkcode CreateInitialConstruct}
    * @see {@linkcode InitialConstruct}
    */
-  initialize?: InitialConstruct | null | undefined
+  initialize: CreateInitialConstruct | InitialConstruct
+
+  /**
+   * Turn a value into character code chunks.
+   *
+   * @see {@linkcode Preprocessor}
+   */
+  preprocess?: Preprocessor | null | undefined
 
   /**
    * Create a new token.
    *
    * @see {@linkcode TokenFactory}
+   * @see {@linkcode u}
+   *
+   * @default u
    */
-  token: TokenFactory
+  token?: TokenFactory | null | undefined
 }
 
 export type { Options as default }

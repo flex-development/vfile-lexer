@@ -11,6 +11,6 @@ import type { TokenTypeMap } from '#src/interfaces'
  * To register custom token types, augment {@linkcode TokenTypeMap}. They will
  * be added to this union automatically.
  */
-type TokenType = keyof TokenTypeMap
+type TokenType = Extract<keyof TokenTypeMap, string>
 
 export type { TokenType as default }

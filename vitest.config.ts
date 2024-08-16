@@ -113,6 +113,13 @@ const config: UserConfigExport = defineConfig((env: ConfigEnv): UserConfig => {
       },
       restoreMocks: true,
       sequence: {
+        /**
+         * Sorting and sharding algorithm provider.
+         *
+         * @see {@linkcode BaseSequencer}
+         *
+         * @extends {BaseSequencer}
+         */
         sequencer: class Sequencer extends BaseSequencer {
           /**
            * Determines test file execution order.

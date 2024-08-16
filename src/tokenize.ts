@@ -3,24 +3,36 @@
  * @module vfile-lexer/tokenize
  */
 
-import type { Options } from '#src/interfaces'
-import type { VFile, Value } from 'vfile'
-import Lexer from './lexer'
+import type {
+  Event,
+  FileLike,
+  TokenizeOptions,
+  Value
+} from '#src/types'
+import tokenizer from './create-tokenizer'
+import preprocess from './preprocess'
 
 /**
- * Tokenize `file`.
+ * Tokenize `value`.
  *
- * @see {@linkcode Lexer}
- * @see {@linkcode Options}
- * @see {@linkcode VFile}
+ * @see {@linkcode Event}
+ * @see {@linkcode FileLike}
+ * @see {@linkcode TokenizeOptions}
  * @see {@linkcode Value}
  *
- * @param {Value | VFile} file - File to tokenize
- * @param {Options} options - Lexer options
- * @return {Lexer} Lexer instance
+ * @param {FileLike | Value | null | undefined} value - File or value
+ * @param {TokenizeOptions} options - Configuration options
+ * @return {Event[]} List of events
  */
-function tokenize(file: Value | VFile, options: Options): Lexer {
-  return Lexer.create(file, options).tokenize()
+function tokenize(
+  value: FileLike | Value | null | undefined,
+  options: TokenizeOptions
+): Event[] {
+  return tokenizer(options).write(preprocess(options)(
+    value,
+    options.encoding,
+    true
+  ))
 }
 
 export default tokenize
