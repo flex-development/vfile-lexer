@@ -1765,7 +1765,7 @@ __metadata:
     eslint-plugin-promise: "npm:6.2.0"
     eslint-plugin-unicorn: "npm:54.0.0"
     eslint-plugin-yml: "npm:1.14.0"
-    globals: "npm:15.6.0"
+    globals: "npm:15.11.0"
     growl: "npm:1.10.5"
     husky: "npm:9.0.11"
     is-ci: "npm:3.0.1"
@@ -5468,10 +5468,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:15.6.0, globals@npm:^15.0.0":
-  version: 15.6.0
-  resolution: "globals@npm:15.6.0"
-  checksum: 10/9b522b1eff444acaf331b0da7f072d5ef75b1cde02d89b3656039252f01b6bcda7a9ea42128e8644117c0ede9116249b1bcf830458b7dbe19fafd4de916a3dc0
+"globals@npm:15.11.0, globals@npm:^15.0.0":
+  version: 15.11.0
+  resolution: "globals@npm:15.11.0"
+  checksum: 10/14009ef1906ac929d930ed1c896a47159e7d11b4d201901ca5f3827766519191a3f5fb45124de43c4511fee04018704e7ed5a097fb37d23abf39523d1d41c85f
   languageName: node
   linkType: hard
 
